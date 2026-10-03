@@ -1,0 +1,8 @@
+.venv/
+__pycache__/
+*.py[cod]
+.DS_Store
+
+evs_wvs_dataset.csv
+problem_definition_report_part1_data.pdf
+ZA7505_cdb.pdf

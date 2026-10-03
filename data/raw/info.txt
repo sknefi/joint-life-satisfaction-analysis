@@ -1,0 +1,3 @@
+EVS_WVS_Joint_v5.0  (CSV file)
+
+https://www.worldvaluessurvey.org/WVSEVSjoint2017.jsp
