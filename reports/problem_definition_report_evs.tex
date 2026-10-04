@@ -1,0 +1,231 @@
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=12mm,top=27mm,bottom=13mm]{geometry}
+\usepackage[table]{xcolor}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{multicol}
+\usepackage{fancyhdr}
+\usepackage{microtype}
+\usepackage{tikz}
+\usepackage{hyperref}
+
+\definecolor{Navy}{HTML}{15324A}
+\definecolor{Teal}{HTML}{168C8C}
+\definecolor{PaleTeal}{HTML}{E8F4F3}
+\definecolor{Ink}{HTML}{23313B}
+\definecolor{Muted}{HTML}{60717C}
+\definecolor{Grid}{HTML}{C8D3D8}
+\definecolor{Pale}{HTML}{F4F7F8}
+\definecolor{BlueGray}{HTML}{8BA6B1}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=Teal,
+  urlcolor=Teal,
+  pdftitle={Problem Definition Report - EVS 2017},
+  pdfauthor={Student report},
+  pdfsubject={Data understanding for a semester project}
+}
+\urlstyle{same}
+
+\renewcommand{\familydefault}{\sfdefault}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5.5pt plus 0.6pt minus 0.4pt}
+\setlength{\columnsep}{5mm}
+\setlength{\columnseprule}{0pt}
+\raggedcolumns
+\color{Ink}
+
+\newcommand{\StudentName}{\rule{35mm}{0.3pt}}
+\newcommand{\DatasetFooter}{Joint EVS/WVS 2017--2022 v5.0.0 - EVS analytical subset}
+\newcommand{\ReportHeader}{%
+  \colorbox{Navy}{%
+    \parbox{\dimexpr\textwidth-2\fboxsep\relax}{%
+      \color{white}\vspace{1.3mm}%
+      {\fontsize{14}{15}\selectfont\bfseries Problem Definition Report - Part I: Data}\\[0.6mm]
+      {\fontsize{8.4}{9.2}\selectfont EVS 2017: explaining life satisfaction across countries}\\[1mm]
+      {\fontsize{6.3}{7}\selectfont\color{white!82}Student: \StudentName\quad |\quad 4EK481 / 4EK666\quad |\quad 4 October 2026}%
+      \vspace{1.2mm}%
+    }%
+  }%
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\setlength{\headheight}{20mm}
+\fancyhead[C]{\ReportHeader}
+\renewcommand{\headrulewidth}{1.6pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{Teal}\leaders\hrule height \headrulewidth\hfill}}
+\fancyfoot[L]{\fontsize{6.2}{7}\selectfont\color{Muted}\DatasetFooter}
+\fancyfoot[R]{\fontsize{6.2}{7}\selectfont\color{Muted}Page \thepage}
+\renewcommand{\footrulewidth}{0.35pt}
+
+\newcommand{\ReportSection}[2]{%
+  \vspace{3pt}%
+  {\fontsize{9.5}{10.5}\selectfont\bfseries\color{Navy}#1. #2}\par
+  \vspace{1pt}%
+}
+
+\newcommand{\EvidenceHeading}{%
+  \vspace{3pt}%
+  {\fontsize{9.5}{10.5}\selectfont\bfseries\color{Navy}Methods, evidence and references}\par
+  \vspace{1pt}%
+}
+
+\newcommand{\KeyBox}[1]{%
+  \begingroup
+  \setlength{\fboxsep}{5pt}%
+  \noindent\fcolorbox{Teal}{PaleTeal}{\parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}{#1}}%
+  \endgroup
+}
+
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcommand{\TableHead}[1]{\textcolor{white}{\bfseries #1}}
+
+\newenvironment{ReportTable}[1]
+  {\rowcolors{2}{Pale}{white}\fontsize{6.35}{7.45}\selectfont%
+   \setlength{\tabcolsep}{2.8pt}\renewcommand{\arraystretch}{1.40}%
+   \tabularx{\linewidth}{#1}\rowcolor{Navy}\color{white}}
+  {\endtabularx}
+
+\AtEndDocument{%
+  \ifnum\value{page}=2\relax
+  \else
+    \PackageError{evs-report}{Expected exactly two pages, got \thepage}{}
+  \fi
+}
+
+\begin{document}
+\fontsize{7.75}{9.25}\selectfont
+
+\begin{multicols}{2}
+
+\KeyBox{%
+  \textbf{Research question}\par
+  Which demographic, socioeconomic and social characteristics are associated with life satisfaction in EVS 2017, and how stable are those relationships across countries?\par
+  \vspace{2.5pt}\hrule height 0.3pt\vspace{2.5pt}
+  \textbf{Analytical scope}\par
+  59,438 respondents $\mid$ 36 countries $\mid$ 226 available variables $\mid$ 2017--2021
+}
+
+\ReportSection{1}{Provenance and purpose}
+\textbf{Dataset.} Joint EVS/WVS 2017--2022 Dataset, ZA7505, version 5.0.0; this report uses only European Values Study records (\texttt{study = 1}) from the joint common-core file. The original producers are the European Values Study and World Values Survey; GESIS archives and publishes the joint file. Persistent source: \href{https://doi.org/10.4232/1.14320}{doi:10.4232/1.14320}.[1]
+
+\textbf{Collection and domain.} EVS planned country surveys under common methodological guidance to study values, beliefs, attitudes and well-being. National probability samples interviewed adults in private households during 2017--2021; EVS and WVS then harmonised common questionnaire items.[2] It is interesting for this project because it connects individual circumstances and social context with life satisfaction across diverse European societies.
+
+\textbf{Access/terms.} Data and documentation are available free of charge after GESIS registration, are governed by GESIS Data Usage Terms, and should be cited.[3] No open-content licence label is asserted in the supplied variable report.
+
+\ReportSection{2}{Size and computational profile}
+\begin{ReportTable}{L{0.44\linewidth}Y}
+\TableHead{Quantity} & \TableHead{Result}\\
+Official joint dataset & 156,658 respondents from EVS and WVS\\
+Selected EVS subset ($n$) & 59,438 respondents; 37.94\% of the official joint dataset\\
+Features $p$ & 226 non-empty columns (231 raw; 5 WVS-only columns removed)\\
+Files / format & 1 official CSV / 1 table\\
+Raw joint CSV size & 104.3 MiB\\
+EVS working file & 3.8 MiB Parquet (40.4 MiB CSV-equivalent)\\
+Dense 8-byte baseline & 104.8 MiB plus string/software overhead\\
+\end{ReportTable}
+
+The official joint file is substantially larger: it contains 156,658 EVS and WVS respondents, while the selected 59,438 EVS records represent 37.94\% of all rows. One observation is one respondent; one feature is one delivered column before excluding IDs, protocol fields, weights and $Y$. The data fit comfortably in laptop memory. Size is mainly in $n$, but the greater difficulty is hierarchical dependence and mixed measurement scales. With $n/p \approx 263$ for the 226-column subset, $p$ is small relative to $n$; regularisation may still matter after categorical expansion and with correlated survey items.
+
+\ReportSection{3}{Observational structure: what is one row?}
+The data are \textbf{hierarchical pooled cross-sections}, not a person-level panel: respondents are nested within 36 countries, survey years (2017--2021), fieldwork designs and interview modes. All 59,438 \texttt{uniqid} values are unique. Rows are distinct people but not fully independent: respondents within a country and fieldwork context share institutions, shocks, translations and survey procedures.
+
+A random respondent split would put the same countries and contexts in train and test sets and can overstate transfer performance. Use grouped country holdouts to assess new-country generalisation; where possible, use later fieldwork as a temporal test. Avoid identifiers, fieldwork dates and protocol variables as ordinary predictors because they may leak context.
+
+\textbf{Coverage.} AL, AM, AT, AZ, BA, BG, BY, CH, CZ, DE, DK, EE, ES, FI, FR, GB, GE, HR, HU, IS, IT, LT, LV, ME, MK, NL, NO, PL, PT, RO, RS, RU, SE, SI, SK, UA. Country samples range from 1,003 to 3,362.
+
+\columnbreak
+
+\ReportSection{4}{Variables, support and representation}
+The table is a representative shortlist of important variables, not the complete set of 226 available columns.
+
+\begin{ReportTable}{L{0.32\linewidth}L{0.43\linewidth}Y}
+\TableHead{Role / variable} & \TableHead{Type and support} & \TableHead{Missing}\\
+$Y$: A170 life satisfaction & Ordinal 1--10; numeric treatment is an assumption & 316 (0.53\%)\\
+A008 happiness & Ordinal categorical & 731 (1.23\%)\\
+A009 health & Ordinal categorical & 134 (0.23\%)\\
+A165 trust & Binary categorical & 1,355 (2.28\%)\\
+A173 control & Ordinal 1--10 & 888 (1.49\%)\\
+X001 / X003 sex / age & Nominal / integer; age 82 means 82+ & 26 / 325\\
+X025R / X028 education / work & Ordinal / nominal & 472 / 411\\
+X047E\_EVS5 income & Ordinal household-income decile & 8,740 (14.70\%)\\
+\end{ReportTable}
+
+The remaining columns cover administrative IDs, survey protocol and weights; perceptions of life; work; family and household; national identity; politics and society; religion and morality; security; and respondent, parent and partner demographics. Many administrative fields are not suitable predictors. The model receives integer-coded survey responses, not raw speech or behaviour; wording, response nuance and within-category variation are already discarded. Convert negative missing codes before fitting, encode nominal variables, and preserve ordinal order where the model supports it. Standardise only scale-sensitive numeric inputs; logs are not generally appropriate for bounded categories. Euclidean distance on raw category codes is not meaningful, and many attitude items may be redundant or noisy.
+
+\vspace{2pt}
+{\fontsize{6.7}{7.8}\selectfont\bfseries\color{Navy}A170: life satisfaction (valid $n = 59{,}122$)}\hfill
+{\fontsize{6.2}{7}\selectfont\color{Teal}72.5\% chose 7--10}\par
+\centering
+\begin{tikzpicture}[x=0.67cm,y=0.00014cm]
+  \foreach \x/\v in {0/1089,1/731,2/1557,3/2047,4/5370,5/5458}{
+    \fill[BlueGray] (\x,0) rectangle +(0.50,\v);
+  }
+  \foreach \x/\v in {6/9913,7/14594,8/9126,9/9237}{
+    \fill[Teal] (\x,0) rectangle +(0.50,\v);
+  }
+  \foreach \x/\lab in {0/1,1/2,2/3,3/4,4/5,5/6,6/7,7/8,8/9,9/10}{
+    \node[font=\fontsize{5.5}{6}\selectfont,text=Muted] at (\x+0.25,-1650) {\lab};
+  }
+\end{tikzpicture}
+\raggedright
+
+{\fontsize{6.15}{7.2}\selectfont\color{Muted}\textit{Figure 1.} A170 is concentrated at high values (mean 7.37; median 8), so performance should be compared with a simple central-value baseline.}
+
+\end{multicols}
+
+\newpage
+\begin{multicols}{2}
+
+\ReportSection{5}{Missingness and incomplete observation}
+There are no blank CSV cells; incompleteness is encoded explicitly. Across all selected cells: \textbf{-1 do not know} 303,010 (2.21\%); \textbf{-2 no answer} 112,462 (0.82\%); \textbf{-3 not applicable} 570,604 (4.16\%); \textbf{-4 not asked} 412,640 (3.01\%); \textbf{-5 other missing} 5,956 (0.04\%). These categories must remain distinguishable during preparation.
+
+\begin{ReportTable}{L{0.34\linewidth}L{0.22\linewidth}Y}
+\TableHead{Key variable / meaning} & \TableHead{Valid} & \TableHead{Missing and interpretation}\\
+\shortstack[l]{\texttt{A170}\\Life satisfaction} & 59,122 (99.47\%) & \shortstack[l]{199 (-1: do not know)\\117 (-2: no answer)}\\
+\shortstack[l]{\texttt{X047E\_EVS5}\\Net household-income decile} & 50,698 (85.30\%) & \shortstack[l]{2,513 (-1: do not know)\\5,011 (-2: no answer)\\1,216 (-5: other missing)}\\
+\shortstack[l]{\texttt{A165}\\Most people can be trusted} & 58,083 (97.72\%) & \shortstack[l]{1,012 (-1: do not know)\\343 (-2: no answer)}\\
+\end{ReportTable}
+
+Missingness is unlikely to be globally MCAR. \textbf{-4} is structural by questionnaire/country; MAR is plausible conditional on country, mode, year and demographics; refusals or uncertainty on income may be MNAR. Do not impute at this stage. Age, children and household size are upper-censored rather than missing: 82 means 82+, 5 children means 5+, and household size 6 means 6+. People outside private households are absent from the sample (unit truncation/undercoverage).
+
+\ReportSection{6}{Outliers, measurement and data quality}
+\textbf{Checks.} No duplicate IDs and no values outside documented support were found for the target or selected predictors. A concrete unusual case is the top-coded age category: 1,666 respondents (2.80\%) are recorded as 82, a genuine censored group rather than necessarily an error. Likewise, 1,577 respondents report the 5+ children category and 3,125 the 6+ household-size category. Negative values are documented missing codes, not outliers.
+
+Survey weights can look extreme but are purposeful: \texttt{gwght} ranges 0.006--13.552, \texttt{pwght} 0.015--6.639, and \texttt{wght\_eq1000} 0.297--0.997. Inspect influence and use the weight matching the estimand rather than deleting large weights mechanically. Country labels and units are harmonised, but source-specific fields such as \texttt{X047\_WVS7} are structurally unavailable for EVS and must be excluded.
+
+Life satisfaction, happiness, health, trust, perceived control and income are self-reported and vulnerable to recall, social-desirability, translation, mode and cultural response-style error. Important unmeasured factors include recent life events, detailed mental health, wealth, personality, local prices and country-time shocks.
+
+\ReportSection{7}{Sample, population and future use}
+\textbf{Population of interest.} Adults aged 18+ living in private households in the 36 EVS countries during the wave, with cautious extension to later adults in those countries. Country surveys used single- or multistage probability samples under EVS guidance, so the design is much stronger than convenience sampling, but nonresponse, household-frame exclusions and unequal country sample sizes can bias pooled results. Survey weights adjust selected margins, not all selection or measurement bias.
+
+Coverage is broad geographically but not all of Europe, and each country contributes roughly 1,000--3,400 people; rare demographic combinations and institutional contexts may be sparse. Extrapolation to excluded countries, people outside private households, very small subgroups or future crises is risky.
+
+Future data may shift with country mix, ageing, migration, economic or political conditions, interview mode, translation and post-pandemic attitudes. Both covariate and concept shift are plausible. The least stable relationship is expected across countries and modes, and between pre-COVID and 2020--2021 fieldwork. Report country-specific performance and uncertainty rather than only one pooled score.
+
+\columnbreak
+
+\ReportSection{8}{Signal, noise and first modelling intuition}
+The objective is to \textbf{predict and explain variation in A170}, while treating findings as associations rather than causal effects. Expected signal: subjective health, happiness, perceived control, employment, education, income, age, household composition and country context. Expected irreducible noise: temporary mood, omitted personal events, response-scale interpretation and local shocks.
+
+A170 is ordinal, not a rare event: all ten scores occur, although 72.51\% of valid responses are 7--10. Compare ordinal regression and a carefully justified numeric model with a simple baseline; include country effects and grouped validation. Closely related subjective items may be strong predictors but can blur explanation and outcome definition. \textbf{Main anticipated difficulty:} cross-country and cross-mode heterogeneity combined with survey dependence, not computation.
+
+\EvidenceHeading
+All counts in this report were computed from the supplied immutable CSV after selecting \texttt{study = 1}; the five all-missing WVS-only columns were removed only in the derived EVS Parquet file. Missing codes were not imputed. Variable meanings and supports were checked against the supplied ZA7505 variable report.[4]
+
+{\fontsize{6.35}{7.5}\selectfont\color{Muted}
+[1] EVS/WVS (2024), \textit{Joint EVS/WVS 2017--2022 Dataset}, ZA7505 v5.0.0, GESIS: \href{https://doi.org/10.4232/1.14320}{doi.org/10.4232/1.14320}.\par
+[2] EVS, joint-dataset description and composition: \href{https://europeanvaluesstudy.eu/surveys/evs-wvs-collaborations/joint-evs-wvs/}{europeanvaluesstudy.eu/.../joint-evs-wvs/}.\par
+[3] EVS/GESIS data access and usage terms: \href{https://europeanvaluesstudy.eu/surveys/data-access/}{europeanvaluesstudy.eu/surveys/data-access/}.\par
+[4] \textit{Joint EVS/WVS 2017--2022 Variable Report}, ZA7505 v5.0.0 (supplied documentation).
+}
+
+\end{multicols}
+\end{document}
