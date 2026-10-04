@@ -107,14 +107,14 @@
 
 \KeyBox{%
   \textbf{Research question}\par
-  Which demographic, socioeconomic and social characteristics are associated with life satisfaction in EVS 2017, and how stable are those relationships across countries?\par
+  Which demographic, socioeconomic and social characteristics are associated with life satisfaction among EVS respondents, and how stable are these relationships across countries?\par
   \vspace{2.5pt}\hrule height 0.3pt\vspace{2.5pt}
   \textbf{Analytical scope}\par
   59,438 respondents $\mid$ 36 countries $\mid$ 226 available variables $\mid$ 2017--2021
 }
 
 \ReportSection{1}{Provenance and purpose}
-\textbf{Dataset.} Joint EVS/WVS 2017--2022 Dataset, ZA7505, version 5.0.0; this report uses only European Values Study records (\texttt{study = 1}) from the joint common-core file. The original producers are the European Values Study and World Values Survey; GESIS archives and publishes the joint file. Persistent source: \href{https://doi.org/10.4232/1.14320}{doi:10.4232/1.14320}.[1]
+\textbf{Dataset.} Joint European Values Study (EVS) / World Values Survey (WVS) 2017--2022 Dataset, version 5.0.0. ZA7505 is its archive study identifier. This report uses only EVS records (\texttt{study = 1}) from the joint common-core file. The original producers are EVS and WVS; GESIS -- Leibniz Institute for the Social Sciences -- archives and publishes the joint file. Persistent source: \href{https://doi.org/10.4232/1.14320}{doi:10.4232/1.14320}.[1]
 
 \textbf{Collection and domain.} EVS planned country surveys under common methodological guidance to study values, beliefs, attitudes and well-being. National probability samples interviewed adults in private households during 2017--2021; EVS and WVS then harmonised common questionnaire items.[2] It is interesting for this project because it connects individual circumstances and social context with life satisfaction across diverse European societies.
 
@@ -127,9 +127,8 @@ Official joint dataset & 156,658 respondents from EVS and WVS\\
 Selected EVS subset ($n$) & 59,438 respondents; 37.94\% of the official joint dataset\\
 Features $p$ & 226 non-empty columns (231 raw; 5 WVS-only columns removed)\\
 Files / format & 1 official CSV / 1 table\\
-Raw joint CSV size & 104.3 MiB\\
+Raw joint CSV size & 104.3 MiB (mebibytes)\\
 EVS working file & 3.8 MiB Parquet (40.4 MiB CSV-equivalent)\\
-Dense 8-byte baseline & 104.8 MiB plus string/software overhead\\
 \end{ReportTable}
 
 The official joint file is substantially larger: it contains 156,658 EVS and WVS respondents, while the selected 59,438 EVS records represent 37.94\% of all rows. One observation is one respondent; one feature is one delivered column before excluding IDs, protocol fields, weights and $Y$. The data fit comfortably in laptop memory. Size is mainly in $n$, but the greater difficulty is hierarchical dependence and mixed measurement scales. With $n/p \approx 263$ for the 226-column subset, $p$ is small relative to $n$; regularisation may still matter after categorical expansion and with correlated survey items.
@@ -139,7 +138,7 @@ The data are \textbf{hierarchical pooled cross-sections}, not a person-level pan
 
 A random respondent split would put the same countries and contexts in train and test sets and can overstate transfer performance. Use grouped country holdouts to assess new-country generalisation; where possible, use later fieldwork as a temporal test. Avoid identifiers, fieldwork dates and protocol variables as ordinary predictors because they may leak context.
 
-\textbf{Coverage.} AL, AM, AT, AZ, BA, BG, BY, CH, CZ, DE, DK, EE, ES, FI, FR, GB, GE, HR, HU, IS, IT, LT, LV, ME, MK, NL, NO, PL, PT, RO, RS, RU, SE, SI, SK, UA. Country samples range from 1,003 to 3,362.
+\textbf{Country coverage (ISO codes).} AL, AM, AT, AZ, BA, BG, BY, CH, CZ, DE, DK, EE, ES, FI, FR, GB, GE, HR, HU, IS, IT, LT, LV, ME, MK, NL, NO, PL, PT, RO, RS, RU, SE, SI, SK, UA. The number of respondents per country ranges from 1,003 in Montenegro to 3,362 in Denmark.
 
 \columnbreak
 
@@ -153,8 +152,10 @@ A008 happiness & Ordinal categorical & 731 (1.23\%)\\
 A009 health & Ordinal categorical & 134 (0.23\%)\\
 A165 trust & Binary categorical & 1,355 (2.28\%)\\
 A173 control & Ordinal 1--10 & 888 (1.49\%)\\
-X001 / X003 sex / age & Nominal / integer; age 82 means 82+ & 26 / 325\\
-X025R / X028 education / work & Ordinal / nominal & 472 / 411\\
+X001 sex & Nominal categorical & 26 (0.04\%)\\
+X003 age & Integer; top-coded at 82, meaning 82+ & 325 (0.55\%)\\
+X025R education & Ordinal categorical & 472 (0.79\%)\\
+X028 employment status & Nominal categorical & 411 (0.69\%)\\
 X047E\_EVS5 income & Ordinal household-income decile & 8,740 (14.70\%)\\
 \end{ReportTable}
 
@@ -194,7 +195,7 @@ There are no blank CSV cells; incompleteness is encoded explicitly. Across all s
 \shortstack[l]{\texttt{A165}\\Most people can be trusted} & 58,083 (97.72\%) & \shortstack[l]{1,012 (-1: do not know)\\343 (-2: no answer)}\\
 \end{ReportTable}
 
-Missingness is unlikely to be globally MCAR. \textbf{-4} is structural by questionnaire/country; MAR is plausible conditional on country, mode, year and demographics; refusals or uncertainty on income may be MNAR. Do not impute at this stage. Age, children and household size are upper-censored rather than missing: 82 means 82+, 5 children means 5+, and household size 6 means 6+. People outside private households are absent from the sample (unit truncation/undercoverage).
+Missingness is unlikely to be globally missing completely at random (MCAR). \textbf{-4} is structural by questionnaire/country; missing at random (MAR) is plausible conditional on country, mode, year and demographics; refusals or uncertainty on income may be missing not at random (MNAR). Do not impute at this stage. Age, children and household size are upper-censored rather than missing: 82 means 82+, 5 children means 5+, and household size 6 means 6+. People outside private households are absent from the sample (unit truncation/undercoverage).
 
 \ReportSection{6}{Outliers, measurement and data quality}
 \textbf{Checks.} No duplicate IDs and no values outside documented support were found for the target or selected predictors. A concrete unusual case is the top-coded age category: 1,666 respondents (2.80\%) are recorded as 82, a genuine censored group rather than necessarily an error. Likewise, 1,577 respondents report the 5+ children category and 3,125 the 6+ household-size category. Negative values are documented missing codes, not outliers.
