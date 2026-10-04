@@ -48,7 +48,7 @@
       \color{white}\vspace{1.3mm}%
       {\fontsize{14}{15}\selectfont\bfseries Problem Definition Report - Part I: Data}\\[0.6mm]
       {\fontsize{8.4}{9.2}\selectfont EVS 2017: explaining life satisfaction across countries}\\[1mm]
-      {\fontsize{6.3}{7}\selectfont\color{white!82}Student: \StudentName\quad |\quad 4EK481 / 4EK666\quad |\quad 4 October 2026}%
+      {\fontsize{6.3}{7}\selectfont\color{white!82}Student: \StudentName\quad |\quad 4EK481 / 4EK666\quad |\quad Winter semester 2026}%
       \vspace{1.2mm}%
     }%
   }%
@@ -90,6 +90,20 @@
 \newenvironment{ReportTable}[1]
   {\rowcolors{2}{Pale}{white}\fontsize{6.35}{7.45}\selectfont%
    \setlength{\tabcolsep}{2.8pt}\renewcommand{\arraystretch}{1.40}%
+   \tabularx{\linewidth}{#1}\rowcolor{Navy}\color{white}}
+  {\endtabularx}
+
+\newenvironment{MissingTable}[1]
+  {\rowcolors{2}{Pale}{white}\fontsize{6.35}{7.45}\selectfont%
+   \setlength{\tabcolsep}{4.2pt}\setlength{\extrarowheight}{0.5pt}%
+   \renewcommand{\arraystretch}{1.45}%
+   \tabularx{\linewidth}{#1}\rowcolor{Navy}\color{white}}
+  {\endtabularx}
+
+\newenvironment{MissingDetailTable}[1]
+  {\rowcolors{2}{Pale}{white}\fontsize{6.35}{7.45}\selectfont%
+   \setlength{\tabcolsep}{3.6pt}\setlength{\extrarowheight}{0.5pt}%
+   \renewcommand{\arraystretch}{1.45}%
    \tabularx{\linewidth}{#1}\rowcolor{Navy}\color{white}}
   {\endtabularx}
 
@@ -186,16 +200,27 @@ The remaining columns cover administrative IDs, survey protocol and weights; per
 \begin{multicols}{2}
 
 \ReportSection{5}{Missingness and incomplete observation}
-There are no blank CSV cells; incompleteness is encoded explicitly. Across all selected cells: \textbf{-1 do not know} 303,010 (2.21\%); \textbf{-2 no answer} 112,462 (0.82\%); \textbf{-3 not applicable} 570,604 (4.16\%); \textbf{-4 not asked} 412,640 (3.01\%); \textbf{-5 other missing} 5,956 (0.04\%). These categories must remain distinguishable during preparation.
+No CSV cells are blank; incompleteness uses five negative codes, which must remain distinct. Percentages use all selected EVS cells: $n \times p = 59{,}438 \times 231 = \mathbf{13{,}730{,}178}$ (rows $\times$ delivered columns). For example, $303{,}010 / 13{,}730{,}178 = 2.21\%$ for code $-1$.
 
-\begin{ReportTable}{L{0.34\linewidth}L{0.22\linewidth}Y}
+\begin{MissingTable}{L{0.11\linewidth}L{0.34\linewidth}L{0.25\linewidth}Y}
+\TableHead{Code} & \TableHead{Meaning} & \TableHead{Cells} & \TableHead{Share of total}\\
+-1 & Do not know & 303,010 & 2.21\%\\
+-2 & No answer & 112,462 & 0.82\%\\
+-3 & Not applicable & 570,604 & 4.16\%\\
+-4 & Not asked in survey & 412,640 & 3.01\%\\
+-5 & Other missing & 5,956 & 0.04\%\\
+\end{MissingTable}
+
+\textbf{Variable-level examples.} The second table covers three key variables, not the whole dataset. It lists only missing codes with non-zero counts; codes \textbf{-3} and \textbf{-4} do not occur for these variables, although the first table shows that they occur elsewhere in EVS.
+
+\begin{MissingDetailTable}{L{0.34\linewidth}L{0.22\linewidth}Y}
 \TableHead{Key variable / meaning} & \TableHead{Valid} & \TableHead{Missing and interpretation}\\
 \shortstack[l]{\texttt{A170}\\Life satisfaction} & 59,122 (99.47\%) & \shortstack[l]{199 (-1: do not know)\\117 (-2: no answer)}\\
 \shortstack[l]{\texttt{X047E\_EVS5}\\Net household-income decile} & 50,698 (85.30\%) & \shortstack[l]{2,513 (-1: do not know)\\5,011 (-2: no answer)\\1,216 (-5: other missing)}\\
 \shortstack[l]{\texttt{A165}\\Most people can be trusted} & 58,083 (97.72\%) & \shortstack[l]{1,012 (-1: do not know)\\343 (-2: no answer)}\\
-\end{ReportTable}
+\end{MissingDetailTable}
 
-Missingness is unlikely to be globally missing completely at random (MCAR). \textbf{-4} is structural by questionnaire/country; missing at random (MAR) is plausible conditional on country, mode, year and demographics; refusals or uncertainty on income may be missing not at random (MNAR). Do not impute at this stage. Age, children and household size are upper-censored rather than missing: 82 means 82+, 5 children means 5+, and household size 6 means 6+. People outside private households are absent from the sample (unit truncation/undercoverage).
+\textbf{MCAR (missing completely at random)} means missingness is unrelated to observed data or the unreported value; unlikely globally. \textbf{MAR (missing at random)} means observed variables such as country, mode, year and demographics can explain it; plausible for some items. \textbf{MNAR (missing not at random)} means it may depend on the unreported value itself, as with income refusal. Code \textbf{-4} is structural because the question was not asked. Do not impute at this stage. Age, children and household size are upper-censored rather than missing: 82 means 82+, 5 children means 5+, and household size 6 means 6+. People outside private households are absent from the sample (unit truncation/undercoverage).
 
 \ReportSection{6}{Outliers, measurement and data quality}
 \textbf{Checks.} No duplicate IDs and no values outside documented support were found for the target or selected predictors. A concrete unusual case is the top-coded age category: 1,666 respondents (2.80\%) are recorded as 82, a genuine censored group rather than necessarily an error. Likewise, 1,577 respondents report the 5+ children category and 3,125 the 6+ household-size category. Negative values are documented missing codes, not outliers.
@@ -209,9 +234,9 @@ Life satisfaction, happiness, health, trust, perceived control and income are se
 
 Coverage is broad geographically but not all of Europe, and each country contributes roughly 1,000--3,400 people; rare demographic combinations and institutional contexts may be sparse. Extrapolation to excluded countries, people outside private households, very small subgroups or future crises is risky.
 
-Future data may shift with country mix, ageing, migration, economic or political conditions, interview mode, translation and post-pandemic attitudes. Both covariate and concept shift are plausible. The least stable relationship is expected across countries and modes, and between pre-COVID and 2020--2021 fieldwork. Report country-specific performance and uncertainty rather than only one pooled score.
-
 \columnbreak
+
+Future data may shift with country mix, ageing, migration, economic or political conditions, interview mode, translation and post-pandemic attitudes. Both covariate and concept shift are plausible. The least stable relationship is expected across countries and modes, and between pre-COVID and 2020--2021 fieldwork. Report country-specific performance and uncertainty rather than only one pooled score.
 
 \ReportSection{8}{Signal, noise and first modelling intuition}
 The objective is to \textbf{predict and explain variation in A170}, while treating findings as associations rather than causal effects. Expected signal: subjective health, happiness, perceived control, employment, education, income, age, household composition and country context. Expected irreducible noise: temporary mood, omitted personal events, response-scale interpretation and local shocks.
