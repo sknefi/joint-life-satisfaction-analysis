@@ -25,7 +25,12 @@ from .statistics import (
 )
 
 
-def render_report(csv_path: Path, profile: Profile, study_option: str = "EVS") -> str:
+def render_report(
+    csv_path: Path,
+    profile: Profile,
+    study_option: str = "EVS",
+    parquet_path: Path | None = None,
+) -> str:
     """Render a complete report-ready Markdown summary."""
 
     n = profile.row_count
@@ -74,14 +79,37 @@ def render_report(csv_path: Path, profile: Profile, study_option: str = "EVS") -
     add("")
     add("| Quantity | Result |")
     add("|---|---:|")
-    add(f"| Rows / observations (`n`) | {n:,} |")
+    add(f"| Rows in the source joint CSV | {profile.source_row_count:,} |")
+    add(f"| Rows / observations in this analytical scope (`n`) | {n:,} |")
+    add(f"| Selected share of source respondents | {percentage(n, profile.source_row_count)} |")
     add(f"| Delivered columns in the joint CSV (`p_raw`) | {p:,} |")
     add(f"| Columns with at least one non-missing value in this scope | {len(available_columns):,} |")
     add(f"| Structurally unavailable columns in this scope | {len(unavailable_columns):,} |")
     add(f"| Maximum available non-target columns if `Y = A170` | {len(available_columns) - 1:,} |")
     add(f"| `n / p_raw` | {n / p:,.1f} |")
-    add("| Files / tables | 1 CSV file / 1 table |")
-    add(f"| Raw file size | {raw_size:,} bytes ({human_bytes(raw_size)}) |")
+    add("| Source files / tables | 1 CSV file / 1 table |")
+    add(f"| Source joint CSV size on disk | {raw_size:,} bytes ({human_bytes(raw_size)}) |")
+    if profile.selected_csv_bytes is not None:
+        add(
+            f"| Selected rows' CSV-equivalent size | {profile.selected_csv_bytes:,} bytes "
+            f"({human_bytes(profile.selected_csv_bytes)}), calculated without creating a second file |"
+        )
+    if study_option == "EVS":
+        if parquet_path is not None and parquet_path.is_file():
+            parquet_bytes = parquet_path.stat().st_size
+            add(
+                f"| Derived EVS Parquet size on disk (Zstandard) | {parquet_bytes:,} bytes "
+                f"({human_bytes(parquet_bytes)}) |"
+            )
+            if profile.selected_csv_bytes:
+                reduction = 100 * (1 - parquet_bytes / profile.selected_csv_bytes)
+                ratio = profile.selected_csv_bytes / parquet_bytes
+                add(
+                    f"| Parquet reduction versus EVS CSV-equivalent | "
+                    f"{reduction:.2f}% smaller ({ratio:.1f}x) |"
+                )
+        else:
+            add("| Derived EVS Parquet size on disk | Not generated; run `make data` |")
     add(f"| Dense 8-byte matrix baseline | {human_bytes(dense_numeric_bytes)} plus software/string overhead |")
     add("")
     add(
@@ -90,6 +118,12 @@ def render_report(csv_path: Path, profile: Profile, study_option: str = "EVS") -
         "not the main modelling difficulty. The final predictor count will be lower before encoding "
         "because IDs, protocol variables, weights, and the target are not ordinary predictors."
     )
+    if study_option != "all" and profile.selected_csv_bytes is not None:
+        add(
+            f"The source file remains {human_bytes(raw_size)} on disk because the subset is filtered at "
+            f"runtime. If the selected rows and header were copied unchanged into a separate CSV, that "
+            f"file would be {human_bytes(profile.selected_csv_bytes)}; no such duplicate is required."
+        )
     if unavailable_columns:
         add(
             "Columns that are wholly unavailable in this scope: "
@@ -357,4 +391,3 @@ def render_report(csv_path: Path, profile: Profile, study_option: str = "EVS") -
     add("- The deadline is before Lecture 3 (Develop block), with the exact date on Moodle.")
     add("")
     return "\n".join(lines)
-

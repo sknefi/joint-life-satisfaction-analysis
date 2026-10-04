@@ -11,6 +11,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SRC_ROOT = PROJECT_ROOT / "src"
 DEFAULT_CSV = PROJECT_ROOT / "data" / "raw" / "evs_wvs_dataset.csv"
+DEFAULT_PARQUET = PROJECT_ROOT / "data" / "processed" / "evs_v5_0.parquet"
 
 # Allow direct execution without installing the local package.
 sys.path.insert(0, str(SRC_ROOT))
@@ -41,6 +42,12 @@ def parse_args() -> argparse.Namespace:
         default="EVS",
         help="Analytical subset to profile (default: EVS). Use 'all' for the complete joint dataset.",
     )
+    parser.add_argument(
+        "--parquet",
+        type=Path,
+        default=DEFAULT_PARQUET,
+        help="Derived EVS Parquet whose actual size should be included when available.",
+    )
     return parser.parse_args()
 
 
@@ -49,7 +56,8 @@ def main() -> int:
     try:
         csv_path = args.csv.expanduser().resolve()
         profile = profile_csv(csv_path, STUDY_OPTIONS[args.study])
-        report = render_report(csv_path, profile, args.study)
+        parquet_path = args.parquet.expanduser().resolve()
+        report = render_report(csv_path, profile, args.study, parquet_path)
     except (OSError, ValueError) as error:
         print(f"error: {error}", file=sys.stderr)
         return 1

@@ -55,7 +55,9 @@ class ReaderTests(unittest.TestCase):
     def test_evs_filter_keeps_only_evs_row(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             profile = profile_csv(self.make_fixture(Path(temp_dir)), "1")
+        self.assertEqual(profile.source_row_count, 2)
         self.assertEqual(profile.row_count, 1)
+        self.assertIsNotNone(profile.selected_csv_bytes)
         self.assertEqual(profile.study_counts, {"1": 1})
         self.assertEqual(profile.country_counts, {"CZ": 1})
         self.assertEqual(profile.key_counts["A170"]["1"], 1)
@@ -63,12 +65,15 @@ class ReaderTests(unittest.TestCase):
 
     def test_no_filter_keeps_both_studies(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
-            profile = profile_csv(self.make_fixture(Path(temp_dir)), None)
+            fixture = self.make_fixture(Path(temp_dir))
+            profile = profile_csv(fixture, None)
+            source_size = fixture.stat().st_size
+        self.assertEqual(profile.source_row_count, 2)
         self.assertEqual(profile.row_count, 2)
+        self.assertEqual(profile.selected_csv_bytes, source_size)
         self.assertEqual(profile.study_counts, {"1": 1, "2": 1})
         self.assertEqual(profile.duplicate_uniqids, 0)
 
 
 if __name__ == "__main__":
     unittest.main()
-

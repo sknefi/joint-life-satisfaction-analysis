@@ -36,7 +36,9 @@ class NumericSummary:
 @dataclass
 class Profile:
     columns: list[str]
+    source_row_count: int = 0
     row_count: int = 0
+    selected_csv_bytes: int | None = None
     blank_cells: int = 0
     missing_counts: Counter[str] = field(default_factory=Counter)
     column_valid_counts: Counter[str] = field(default_factory=Counter)
@@ -89,6 +91,7 @@ def profile_csv(csv_path: Path, study_code: str | None = "1") -> Profile:
         )
 
         for row in reader:
+            profile.source_row_count += 1
             study = row["study"]
             if study_code is not None and study != study_code:
                 continue
@@ -133,5 +136,36 @@ def profile_csv(csv_path: Path, study_code: str | None = "1") -> Profile:
         requested = STUDY_LABELS.get(study_code or "", "requested scope")
         raise ValueError(f"No rows found for {requested}.")
 
+    profile.selected_csv_bytes = _measure_selected_csv_bytes(
+        csv_path, study_code, profile.row_count
+    )
     return profile
 
+
+def _measure_selected_csv_bytes(
+    csv_path: Path, study_code: str | None, expected_rows: int
+) -> int | None:
+    """Measure a header-plus-selected-rows copy without creating that copy.
+
+    The supplied EVS/WVS CSV stores one complete respondent per physical line and
+    places ``study`` in the first column. If a future input violates that layout,
+    return ``None`` rather than report a misleading size.
+    """
+
+    if study_code is None:
+        return csv_path.stat().st_size
+
+    prefix = study_code.encode("ascii") + b","
+    selected_rows = 0
+    selected_bytes = 0
+    with csv_path.open("rb") as stream:
+        header = stream.readline()
+        selected_bytes += len(header)
+        for line in stream:
+            if line.startswith(prefix):
+                selected_rows += 1
+                selected_bytes += len(line)
+
+    if selected_rows != expected_rows:
+        return None
+    return selected_bytes

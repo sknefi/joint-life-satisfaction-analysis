@@ -1,2 +1,1 @@
-# The dataset profiler uses only the Python standard library.
-
+pyarrow==25.0.1
