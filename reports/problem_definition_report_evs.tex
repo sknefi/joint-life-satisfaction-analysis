@@ -27,7 +27,7 @@
   linkcolor=Teal,
   urlcolor=Teal,
   pdftitle={Problem Definition Report - EVS 2017},
-  pdfauthor={Student report},
+  pdfauthor={Filip Karika},
   pdfsubject={Data understanding for a semester project}
 }
 \urlstyle{same}
@@ -40,7 +40,7 @@
 \raggedcolumns
 \color{Ink}
 
-\newcommand{\StudentName}{\rule{35mm}{0.3pt}}
+\newcommand{\StudentName}{Filip Karika}
 \newcommand{\DatasetFooter}{Joint EVS/WVS 2017--2022 v5.0.0 - EVS analytical subset}
 \newcommand{\ReportHeader}{%
   \colorbox{Navy}{%
@@ -83,9 +83,14 @@
   \endgroup
 }
 
+\renewcommand{\tabularxcolumn}[1]{m{#1}}
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
-\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
-\newcommand{\TableHead}[1]{\textcolor{white}{\bfseries #1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}m{#1}}
+\newcommand{\TableHead}[1]{%
+  \raggedright\arraybackslash%
+  \rule[-1.8ex]{0pt}{5.4ex}%
+  \textcolor{white}{\bfseries #1}%
+}
 
 \newenvironment{ReportTable}[1]
   {\rowcolors{2}{Pale}{white}\fontsize{6.35}{7.45}\selectfont%
