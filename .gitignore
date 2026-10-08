@@ -13,3 +13,5 @@ reports/data_profile*.md
 # Reproducible derived data generated from the immutable source CSV.
 data/processed/*.parquet
 data/processed/*.metadata.json
+
+output/
