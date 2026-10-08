@@ -1,3 +1,26 @@
-EVS/WVS Joint v5.0 Codebook  (PDF file)
+Directory: docs
+Purpose: Official documentation for the Joint EVS/WVS dataset.
 
+Stored file
+-----------
+Filename: ZA7505_cdb.pdf
+Document: Joint EVS/WVS 2017-2022 Dataset - Variable Report (Codebook)
+Version: June 2024 (v5; dataset version 5.0.0)
+Length: 382 pages
+Publishers: GESIS Data Archive and JD Systems Institute / World Values Survey
+
+Contents:
+- Common EVS/WVS variable dictionary and harmonisation notes
+- Variable names, labels, question wording and response categories
+- Official missing-value codes (-1 through -5)
+- Correspondence between EVS 2017 and WVS Wave 7 source variables
+- Methodological and country-specific notes
+
+Official source:
 https://www.worldvaluessurvey.org/WVSEVSjoint2017.jsp
+
+Dataset DOI:
+https://doi.org/10.4232/1.14320
+
+SHA-256:
+74f4a3cb2c02d372f98a0f1c680e429b4840bc64d522bbbdaedf22c0044bc851

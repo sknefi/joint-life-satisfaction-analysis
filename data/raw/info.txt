@@ -1,3 +1,33 @@
-EVS_WVS_Joint_v5.0  (CSV file)
+Directory: data/raw
+Purpose: Immutable source data downloaded from the official Joint EVS/WVS release.
 
+Stored file
+-----------
+Filename: evs_wvs_dataset.csv
+Format: CSV
+Dataset: Joint European Values Study (EVS) / World Values Survey (WVS) 2017-2022
+Archive study: ZA7505
+Version: 5.0.0 (24 June 2024)
+Producers: European Values Study and World Values Survey
+Shape: 156,658 respondent rows x 231 columns
+Coverage: 92 countries and territories
+
+Project use
+-----------
+This CSV is the project's source of truth and must not be modified in place.
+Analysis selects EVS records with study == 1, producing 59,438 respondents
+from 36 countries. Derived files, including the EVS-only Parquet dataset, are
+reproducible outputs and do not replace this raw source. The documented
+negative missing-value codes (-1 through -5) are preserved.
+
+Official source:
 https://www.worldvaluessurvey.org/WVSEVSjoint2017.jsp
+
+GESIS DOI:
+https://doi.org/10.4232/1.14320
+
+WVS DOI:
+https://doi.org/10.14281/18241.26
+
+SHA-256:
+bb9094400071c37a0e43fd8b5a21875303d0329f57b51a0ed870fc278659258f

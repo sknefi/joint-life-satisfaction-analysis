@@ -1,3 +1,30 @@
-problem_definition_report_part1_data.pdf  (PDF file)
+Directory: docs/subject
+Purpose: Original seminar-assignment briefs for 4EK481 & 4EK666 Modelling in Data Science.
 
+Source:
 https://moodle.vse.cz/mod/folder/view.php?id=857464
+
+Stored files
+------------
+
+1. problem_definition_report_part1_data.pdf
+   Title: Problem Definition Report - Part I: Data
+   Type: Seminar assignment
+   Length: 3 pages
+   Contents: Requirements for selecting and understanding the semester-project
+   dataset, covering provenance, size, observational structure, variables,
+   missingness, data quality, population and future use, and first modelling
+   intuition. The submitted report is limited to two pages of text.
+   SHA-256:
+   c45c3024fa54628f59341ef83297ff0f67f34d41c87a5c94799ae2098228c262
+
+2. problem_definition_report_part2_questions.pdf
+   Title: Problem Definition Report - Part II: Questions
+   Type: Seminar assignment
+   Length: 3 pages
+   Contents: Requirements for formulating and assessing descriptive,
+   inferential, predictive, and causal or decision questions, including data
+   feasibility, limitations, and a final answerability verdict. No models need
+   to be fitted at this stage.
+   SHA-256:
+   e18698883182e68abd2dfab82cf4724b88c9402965f0d1db30d880c4beca78d3
