@@ -138,7 +138,7 @@
 \Subsection{A. Observed-sample description}
 \QuestionBox{Sample question}{Among the 59,438 observed EVS respondents in 36 countries during 2017--2021, how does the proportion reporting high life satisfaction (\texttt{A170} scores 7--10) vary across household-income deciles, employment-status groups and countries?}
 
-\textbf{Target and usefulness.} One row is one respondent. The primary quantity is the unweighted proportion with \texttt{A170} $\geq 7$ in each income, employment and country group, accompanied by the full 1--10 distribution and subgroup size. This describes inequality in reported well-being and identifies groups for later modelling; it does not claim a population or causal effect.
+\textbf{Target and usefulness.} One row is one respondent. All 59,438 \texttt{uniqid} values are unique, and no respondent-level aggregation is used; duplicate or aggregation artifacts therefore do not change the stated sample size. The primary quantity is the unweighted proportion with \texttt{A170} $\geq 7$ in each income, employment and country group, accompanied by the full 1--10 distribution and subgroup size. This describes inequality in reported well-being and identifies groups for later modelling; it does not claim a population or causal effect.
 
 \begin{ReportTable}{L{0.24\linewidth}L{0.29\linewidth}Y}
 \TableHead{Variable} & \TableHead{Meaning / unit} & \TableHead{Availability in EVS}\\
@@ -158,11 +158,11 @@ Complete key-variable rows & Valid on target, income and employment & 50,269 res
 \Subsection{B. Population description and inference}
 \QuestionBox{Population question}{Among adults aged 18+ living in private households represented by the 36 participating EVS country surveys in 2017--2021, what are the weighted proportions reporting high life satisfaction, and how do those proportions differ across income and employment groups?}
 
-\textbf{Estimand and uncertainty.} Estimate country-specific weighted proportions and differences with 95\% confidence intervals. For within-country estimates, use \texttt{gwght}; for an equal-country pooled summary, use \texttt{gwght} $\times$ \texttt{wght\_eq1000}; for an individual population-size-weighted pooled summary, use \texttt{gwght} $\times$ \texttt{pwght}. The pooled estimand must be chosen before analysis because these answers represent different target populations.
+\textbf{Estimand, usefulness and uncertainty.} To compare socioeconomic gaps relevant to national well-being policy, estimate country-specific weighted proportions and differences with 95\% confidence intervals. For within-country estimates, use \texttt{gwght}; for an equal-country pooled summary, use \texttt{gwght} $\times$ \texttt{wght\_eq1000}; for an individual population-size-weighted pooled summary, use \texttt{gwght} $\times$ \texttt{pwght}. Choose the pooled estimand before analysis because these answers represent different target populations.
 
 \textbf{Inference conditions.} EVS used national probability-sample designs, but respondents are clustered by country and fieldwork context. Variance estimation must respect weights and clustering. Valid generalisation also assumes that remaining nonresponse is adequately controlled after weighting and that translated questions measure sufficiently comparable concepts.
 
-\textbf{Limits and repairs.} The frame excludes people outside private households, coverage is not all of Europe, and survey weights cannot repair unmeasured nonresponse or cultural response-style bias. Inspect design documentation, declare the pooled estimand and weight, use survey-aware intervals, and narrow claims to represented country populations and fieldwork periods.
+\textbf{Limits and repairs.} The frame excludes people outside private households, coverage is not all of Europe, and weights cannot repair unmeasured nonresponse or cultural response-style bias. Confirm whether complete national stratum and primary-sampling-unit identifiers are available; if not, obtain the design files or label simpler country-clustered intervals approximate. Declare the estimand and narrow claims to represented country populations and fieldwork periods.
 
 \VerdictBox{Amber}{PaleAmber}{Answerable after specified changes: fix the target estimand, weight and design-aware uncertainty method.}
 
@@ -191,13 +191,13 @@ The target plus the selected core predictors (health, trust, control, sex, age, 
   \item \textbf{Baseline and models.} Compare a training-set median baseline with ordinal regression and one flexible alternative. A complex model must beat the baseline out of sample to be useful.
   \item \textbf{Splits.} Use country-grouped validation for claims about transfer to another country context. A within-country respondent split answers the narrower same-context question. Keep a final untouched test set and perform preprocessing only on training data.
   \item \textbf{Success.} Report mean absolute error on the 1--10 scale, ordinal class probabilities and calibration by country. Also inspect errors by sex, age, education and employment rather than only one pooled average.
-  \item \textbf{Uncertainty.} Prediction probabilities describe outcome uncertainty for a new respondent; bootstrap or resampling units must preserve country clustering. A confidence interval for the mean prediction would answer a different question.
+  \item \textbf{Uncertainty.} Report a point prediction plus the ordinal probability distribution for a new outcome, not a confidence interval for its conditional mean. Use country-grouped bootstrap resampling for performance uncertainty. Measurement, estimation, model choice, country shift and future shocks remain.
 \end{CompactItemize}
 
 \Subsection{Feasibility gaps and repairs}
 \textbf{Information availability.} The predictor set is valid only for a completed EVS-style questionnaire. Concurrent subjective answers may be unavailable in other applications, while happiness can nearly restate the target. Freeze the prediction moment and variables before modelling and report a demographics-only benchmark.
 
-\textbf{Target quality and transfer.} The target is a single self-report with translation, mode and cultural response-style error. A model may learn country-specific response conventions rather than well-being. Training data contain one survey wave per country context, so later-wave performance and shocks are not directly testable.
+\textbf{Target quality and transfer.} The target is a single self-report with translation, mode and cultural response-style error. Temporary mood, recent personal events, personality and detailed mental health remain partly unpredictable. A model may learn country-specific response conventions rather than well-being. One wave per country context cannot establish later-wave performance.
 
 \textbf{Repairs.} Validate on a later EVS release or separately collected survey, preserve identical question wording, add missingness indicators where justified, and compare performance under same-country and held-out-country evaluation. Restrict deployment to populations and instruments represented in validation.
 
@@ -209,7 +209,7 @@ The target plus the selected core predictors (health, trust, control, sex, age, 
 
 \QuestionBox{Causal question}{Among adults aged 18--64 who are unemployed at baseline, what would be the average effect on life satisfaction 12 months later of obtaining paid employment within three months, compared with remaining unemployed?}
 
-\textbf{Intervention and target.} The treatment is entry into paid full-time or part-time employment within three months; the comparison is remaining unemployed over that period. The outcome is \texttt{A170} measured 12 months after baseline. The estimand is the average treatment effect among baseline-unemployed adults aged 18--64. EVS contains 5,023 respondents recorded as unemployed, including 4,715 aged 18--64 with valid contemporaneous life satisfaction, but it does not observe this longitudinal intervention or outcome.
+\textbf{Intervention, target and usefulness.} The treatment is entry into paid full-time or part-time employment within three months; the comparison is remaining unemployed. The outcome is \texttt{A170} measured 12 months after baseline. The estimand is the average treatment effect among baseline-unemployed adults aged 18--64; a credible answer could inform employment-support policy. EVS contains 5,023 unemployed respondents, including 4,715 aged 18--64 with valid contemporaneous life satisfaction, but it does not observe this longitudinal intervention or outcome.
 
 \begin{ReportTable}{L{0.24\linewidth}L{0.35\linewidth}Y}
 \TableHead{Causal requirement} & \TableHead{What EVS provides} & \TableHead{Critical gap / implication}\\
