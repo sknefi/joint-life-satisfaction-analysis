@@ -1,0 +1,247 @@
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[margin=13mm,top=27mm,bottom=13mm]{geometry}
+\usepackage[table]{xcolor}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{fancyhdr}
+\usepackage{microtype}
+\usepackage{hyperref}
+
+\definecolor{Navy}{HTML}{15324A}
+\definecolor{Teal}{HTML}{168C8C}
+\definecolor{PaleTeal}{HTML}{E8F4F3}
+\definecolor{Ink}{HTML}{23313B}
+\definecolor{Muted}{HTML}{60717C}
+\definecolor{Grid}{HTML}{C8D3D8}
+\definecolor{Pale}{HTML}{F4F7F8}
+\definecolor{Amber}{HTML}{C47A16}
+\definecolor{PaleAmber}{HTML}{FFF3DF}
+\definecolor{Red}{HTML}{A94646}
+\definecolor{PaleRed}{HTML}{FBECEC}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=Teal,
+  urlcolor=Teal,
+  pdftitle={Problem Definition Report - Part II: Questions},
+  pdfauthor={Filip Karika},
+  pdfsubject={Research questions and feasibility for the EVS semester project}
+}
+\urlstyle{same}
+
+\renewcommand{\familydefault}{\sfdefault}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4.5pt plus 0.5pt minus 0.3pt}
+\color{Ink}
+
+\newcommand{\StudentName}{Filip Karika}
+\newcommand{\DatasetFooter}{Joint EVS/WVS 2017--2022 v5.0.0 - EVS analytical subset}
+\newcommand{\ReportHeader}{%
+  \colorbox{Navy}{%
+    \parbox{\dimexpr\textwidth-2\fboxsep\relax}{%
+      \color{white}\vspace{1.3mm}%
+      {\fontsize{14}{15}\selectfont\bfseries Problem Definition Report - Part II: Questions}\\[0.6mm]
+      {\fontsize{8.4}{9.2}\selectfont Life satisfaction in the European Values Study}\\[1mm]
+      {\fontsize{6.3}{7}\selectfont\color{white!82}Student: \StudentName\quad |\quad 4EK481 / 4EK666\quad |\quad Winter semester 2026}%
+      \vspace{1.2mm}%
+    }%
+  }%
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\setlength{\headheight}{20mm}
+\fancyhead[C]{\ReportHeader}
+\renewcommand{\headrulewidth}{1.6pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{Teal}\leaders\hrule height \headrulewidth\hfill}}
+\fancyfoot[L]{\fontsize{6.2}{7}\selectfont\color{Muted}\DatasetFooter}
+\fancyfoot[R]{\fontsize{6.2}{7}\selectfont\color{Muted}Page \thepage}
+\renewcommand{\footrulewidth}{0.35pt}
+
+\newcommand{\ReportSection}[2]{%
+  \vspace{2pt}%
+  {\fontsize{12}{13}\selectfont\bfseries\color{Navy}#1. #2}\par
+  \vspace{1pt}%
+}
+
+\newcommand{\Subsection}[1]{%
+  \vspace{2pt}%
+  {\fontsize{9.3}{10.3}\selectfont\bfseries\color{Navy}#1}\par
+}
+
+\newcommand{\QuestionBox}[2]{%
+  \begingroup
+  \setlength{\fboxsep}{5pt}%
+  \noindent\fcolorbox{Teal}{PaleTeal}{%
+    \parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}{%
+      {\bfseries\color{Teal}#1}\par
+      \vspace{1pt}#2
+    }%
+  }%
+  \endgroup
+}
+
+\newcommand{\VerdictBox}[3]{%
+  \begingroup
+  \setlength{\fboxsep}{4.5pt}%
+  \noindent\fcolorbox{#1}{#2}{%
+    \parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}{%
+      \textbf{Feasibility verdict: #3}%
+    }%
+  }%
+  \endgroup
+}
+
+\renewcommand{\tabularxcolumn}[1]{m{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}m{#1}}
+\newcommand{\TableHead}[1]{%
+  \raggedright\arraybackslash%
+  \rule[-1.6ex]{0pt}{5.1ex}%
+  \textcolor{white}{\bfseries #1}%
+}
+
+\newenvironment{ReportTable}[1]
+  {\rowcolors{2}{Pale}{white}\fontsize{7.05}{8.25}\selectfont%
+   \setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.34}%
+   \tabularx{\linewidth}{#1}\rowcolor{Navy}\color{white}}
+  {\endtabularx}
+
+\newenvironment{CompactItemize}{%
+  \begin{itemize}%
+  \setlength{\itemsep}{1.5pt}%
+  \setlength{\topsep}{2pt}%
+  \setlength{\parsep}{0pt}%
+  \setlength{\parskip}{0pt}%
+}{\end{itemize}}
+
+\AtEndDocument{%
+  \ifnum\value{page}=3\relax
+  \else
+    \PackageError{evs-part2-report}{Expected exactly three pages, got \thepage}{}
+  \fi
+}
+
+\begin{document}
+\fontsize{8.2}{9.8}\selectfont
+
+\QuestionBox{Question set at a glance}{%
+  \textbf{Description:} How does life satisfaction vary by household-income decile, employment status and country?\\
+  \textbf{Prediction:} Can demographic, socioeconomic and social characteristics predict the 1--10 life-satisfaction score of an unseen EVS respondent?\\
+  \textbf{Causality:} For an unemployed adult, what would be the effect on life satisfaction of obtaining paid employment rather than remaining unemployed?
+}
+
+\ReportSection{1}{Description: first the sample, then the population}
+
+\Subsection{A. Observed-sample description}
+\QuestionBox{Sample question}{Among the 59,438 observed EVS respondents in 36 countries during 2017--2021, how does the proportion reporting high life satisfaction (\texttt{A170} scores 7--10) vary across household-income deciles, employment-status groups and countries?}
+
+\textbf{Target and usefulness.} One row is one respondent. The primary quantity is the unweighted proportion with \texttt{A170} $\geq 7$ in each income, employment and country group, accompanied by the full 1--10 distribution and subgroup size. This describes inequality in reported well-being and identifies groups for later modelling; it does not claim a population or causal effect.
+
+\begin{ReportTable}{L{0.24\linewidth}L{0.29\linewidth}Y}
+\TableHead{Variable} & \TableHead{Meaning / unit} & \TableHead{Availability in EVS}\\
+\texttt{A170} & Life satisfaction, ordinal 1--10 & 59,122 valid (99.47\%); 42,870 valid respondents chose 7--10\\
+\texttt{X047E\_EVS5} & Net household-income decile, 1--10 & 50,698 valid (85.30\%); largest item-level gap\\
+\texttt{X028} & Eight employment-status categories & 59,027 valid (99.31\%); 5,023 respondents are unemployed\\
+\texttt{cntry} / \texttt{cntry\_AN} & Country code / label & 36 EVS countries represented\\
+Complete key-variable rows & Valid on target, income and employment & 50,269 respondents (84.57\% of the EVS subset)\\
+\end{ReportTable}
+
+\textbf{Approach and assumptions.} Show counts, proportions and the complete ordinal distribution by group; do not treat category codes as continuous distances without justification. Report results by country before pooling. Define the 7--10 threshold in advance and check whether conclusions change when the full scale or median is used.
+
+\textbf{Gaps and consequences.} Income is missing for 14.70\%; refusals or uncertainty may depend on true income, so complete-case comparisons may be biased rather than merely imprecise. Life satisfaction and income are self-reported, culturally interpreted and measured once. Small intersections of country, income and employment should be combined or suppressed rather than presented as stable patterns.
+
+\VerdictBox{Teal}{PaleTeal}{Answerable now for the observed sample, with explicit missing-data and measurement caveats.}
+
+\Subsection{B. Population description and inference}
+\QuestionBox{Population question}{Among adults aged 18+ living in private households represented by the 36 participating EVS country surveys in 2017--2021, what are the weighted proportions reporting high life satisfaction, and how do those proportions differ across income and employment groups?}
+
+\textbf{Estimand and uncertainty.} Estimate country-specific weighted proportions and differences with 95\% confidence intervals. For within-country estimates, use \texttt{gwght}; for an equal-country pooled summary, use \texttt{gwght} $\times$ \texttt{wght\_eq1000}; for an individual population-size-weighted pooled summary, use \texttt{gwght} $\times$ \texttt{pwght}. The pooled estimand must be chosen before analysis because these answers represent different target populations.
+
+\textbf{Inference conditions.} EVS used national probability-sample designs, but respondents are clustered by country and fieldwork context. Variance estimation must respect weights and clustering. Valid generalisation also assumes that remaining nonresponse is adequately controlled after weighting and that translated questions measure sufficiently comparable concepts.
+
+\textbf{Limits and repairs.} The frame excludes people outside private households, coverage is not all of Europe, and survey weights cannot repair unmeasured nonresponse or cultural response-style bias. Inspect design documentation, declare the pooled estimand and weight, use survey-aware intervals, and narrow claims to represented country populations and fieldwork periods.
+
+\VerdictBox{Amber}{PaleAmber}{Answerable after specified changes: fix the target estimand, weight and design-aware uncertainty method.}
+
+\newpage
+
+\ReportSection{2}{Prediction: an unseen respondent}
+
+\QuestionBox{Predictive question}{For an unseen EVS-style respondent in one of the represented country contexts, can demographic, socioeconomic and social characteristics predict the respondent's ordinal 1--10 life-satisfaction score (\texttt{A170})?}
+
+\textbf{Case, timing and intended use.} The prediction is made after the non-target survey answers listed below are available but without using \texttt{A170}. The intended use is to measure transferable predictive signal and, if validated, support research-quality imputation of an omitted life-satisfaction response. It is not a clinical diagnosis or an intervention recommendation.
+
+\begin{ReportTable}{L{0.23\linewidth}L{0.31\linewidth}Y}
+\TableHead{Role} & \TableHead{Candidate variables} & \TableHead{Use and caution}\\
+Target $Y$ & \texttt{A170}, ordinal 1--10 & 59,122 valid; retain ordering rather than silently assuming equal intervals\\
+Demographics & \texttt{X001} sex, \texttt{X003} age, \texttt{X025R} education & Known for the respondent; age is top-coded at 82\\
+Socioeconomic & \texttt{X028} employment, \texttt{X047E\_EVS5} income & Income has 14.70\% missing and may be MNAR\\
+Social / subjective & \texttt{A009} health, \texttt{A165} trust, \texttt{A173} control & Potentially strong, but measured concurrently and self-reported\\
+Context & Country, year and interview mode & Useful for calibration; country IDs must not become respondent identifiers\\
+Near-proxy sensitivity & \texttt{A008} happiness & Closely overlaps well-being; compare models with and without it\\
+\end{ReportTable}
+
+The target plus the selected core predictors (health, trust, control, sex, age, education, employment and income) are jointly valid for 48,365 respondents, or 81.37\% of the EVS subset. Missingness must be handled inside each training fold; no imputation or encoding may learn from validation or test observations.
+
+\Subsection{Proposed evaluation}
+\begin{CompactItemize}
+  \item \textbf{Baseline and models.} Compare a training-set median baseline with ordinal regression and one flexible alternative. A complex model must beat the baseline out of sample to be useful.
+  \item \textbf{Splits.} Use country-grouped validation for claims about transfer to another country context. A within-country respondent split answers the narrower same-context question. Keep a final untouched test set and perform preprocessing only on training data.
+  \item \textbf{Success.} Report mean absolute error on the 1--10 scale, ordinal class probabilities and calibration by country. Also inspect errors by sex, age, education and employment rather than only one pooled average.
+  \item \textbf{Uncertainty.} Prediction probabilities describe outcome uncertainty for a new respondent; bootstrap or resampling units must preserve country clustering. A confidence interval for the mean prediction would answer a different question.
+\end{CompactItemize}
+
+\Subsection{Feasibility gaps and repairs}
+\textbf{Information availability.} The predictor set is valid only for a completed EVS-style questionnaire. Concurrent subjective answers may be unavailable in other applications, while happiness can nearly restate the target. Freeze the prediction moment and variables before modelling and report a demographics-only benchmark.
+
+\textbf{Target quality and transfer.} The target is a single self-report with translation, mode and cultural response-style error. A model may learn country-specific response conventions rather than well-being. Training data contain one survey wave per country context, so later-wave performance and shocks are not directly testable.
+
+\textbf{Repairs.} Validate on a later EVS release or separately collected survey, preserve identical question wording, add missingness indicators where justified, and compare performance under same-country and held-out-country evaluation. Restrict deployment to populations and instruments represented in validation.
+
+\VerdictBox{Amber}{PaleAmber}{Answerable after specified changes: define the prediction moment, freeze a leakage-safe predictor set and use validation matched to the intended population.}
+
+\newpage
+
+\ReportSection{3}{Causality: obtaining paid employment}
+
+\QuestionBox{Causal question}{Among adults aged 18--64 who are unemployed at baseline, what would be the average effect on life satisfaction 12 months later of obtaining paid employment within three months, compared with remaining unemployed?}
+
+\textbf{Intervention and target.} The treatment is entry into paid full-time or part-time employment within three months; the comparison is remaining unemployed over that period. The outcome is \texttt{A170} measured 12 months after baseline. The estimand is the average treatment effect among baseline-unemployed adults aged 18--64. EVS contains 5,023 respondents recorded as unemployed, including 4,715 aged 18--64 with valid contemporaneous life satisfaction, but it does not observe this longitudinal intervention or outcome.
+
+\begin{ReportTable}{L{0.24\linewidth}L{0.35\linewidth}Y}
+\TableHead{Causal requirement} & \TableHead{What EVS provides} & \TableHead{Critical gap / implication}\\
+Treatment and comparison & Current employment status in \texttt{X028} & No transition date, employment offer, duration or baseline assignment mechanism\\
+Outcome timing & Current \texttt{A170} measured once & No baseline-to-follow-up change; temporal order is absent\\
+Common causes & Age, education, current health, family variables and country & Prior well-being, detailed health, job history, ability, local vacancies and shocks are incomplete or absent\\
+Comparable alternatives & Employed and unemployed respondents exist & Their treatment propensities may not overlap after relevant causes are considered\\
+Consistency & Broad employment categories & Jobs differ in hours, pay, security and conditions; ``obtaining employment'' is not one uniform treatment\\
+Spillovers / context & Country and survey context observed & Local labour markets and household effects may link units and change outcomes\\
+\end{ReportTable}
+
+\Subsection{Why regression would not identify the effect}
+Employment is chosen or constrained by health, education, prior well-being, labour demand, family circumstances and expected outcomes. Current life satisfaction may itself influence job search and employment. Therefore an adjusted difference or machine-learning feature importance would remain an association unless conditional exchangeability, positivity, consistency and correct temporal ordering were credible. Income after employment may mediate the total effect; automatically controlling for it could remove part of the effect of interest.
+
+\Subsection{What would make the question defensible}
+\begin{CompactItemize}
+  \item Follow unemployed adults from a pre-employment baseline to at least a 12-month outcome, recording job entry, hours, pay, security and job loss.
+  \item Measure baseline life satisfaction, health, work history, household circumstances and local labour-market conditions before treatment.
+  \item Prefer random assignment of a credible job-placement intervention, or justify a natural experiment or assignment rule. With an observational panel, emulate a target trial and pre-specify adjustment variables.
+  \item Check overlap, attrition, treatment consistency and possible household or regional spillovers; use design-appropriate uncertainty only after identification is credible.
+\end{CompactItemize}
+
+\VerdictBox{Red}{PaleRed}{Not defensible from the current cross-sectional EVS data. The dataset can describe an employment--satisfaction association, not the effect of obtaining employment.}
+
+\Subsection{Conclusion and concrete next step}
+The observed-sample description is currently the most defensible question because it requires no generalisation or causal identification. Population inference is plausible after the estimand, survey weights and uncertainty method are fixed. Prediction is feasible for EVS-style records after timing and validation are defined. The causal question requires new longitudinal or experimental evidence.
+
+\textbf{Next step.} Produce unweighted and correctly weighted life-satisfaction distributions by income, employment and country; audit effective subgroup sizes and missingness; then freeze the prediction-time variable list before fitting any model.
+
+\vspace{1pt}
+{\fontsize{6.6}{7.7}\selectfont\color{Muted}
+\textbf{Dataset and source.} EVS/WVS (2024), \textit{Joint EVS/WVS 2017--2022 Dataset}, ZA7505 v5.0.0. This report uses the EVS records (\texttt{study = 1}): 59,438 respondents from 36 countries. GESIS DOI: \href{https://doi.org/10.4232/1.14320}{doi.org/10.4232/1.14320}. Official joint release: \href{https://www.worldvaluessurvey.org/WVSEVSjoint2017.jsp}{worldvaluessurvey.org/WVSEVSjoint2017.jsp}. Variable definitions and weight guidance come from the \textit{Joint EVS/WVS 2017--2022 Variable Report}, version 5.0.0 (24 June 2024). Counts were computed from the immutable joint CSV after selecting EVS records; negative missing codes were not treated as valid values.
+}
+
+\end{document}
