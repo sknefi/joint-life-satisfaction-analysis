@@ -26,7 +26,7 @@
   colorlinks=true,
   linkcolor=Teal,
   urlcolor=Teal,
-  pdftitle={Problem Definition Report - EVS 2017},
+  pdftitle={Life Satisfaction across EVS Countries - Problem Definition Report Part I: Data},
   pdfauthor={Filip Karika},
   pdfsubject={Data understanding for a semester project}
 }
@@ -47,7 +47,7 @@
     \parbox{\dimexpr\textwidth-2\fboxsep\relax}{%
       \color{white}\vspace{1.3mm}%
       {\fontsize{14}{15}\selectfont\bfseries Problem Definition Report - Part I: Data}\\[0.6mm]
-      {\fontsize{8.4}{9.2}\selectfont EVS 2017: explaining life satisfaction across countries}\\[1mm]
+      {\fontsize{8.4}{9.2}\selectfont Life satisfaction across EVS countries, 2017--2021}\\[1mm]
       {\fontsize{6.3}{7}\selectfont\color{white!82}Student: \StudentName\quad |\quad 4EK481 / 4EK666\quad |\quad Winter semester 2026}%
       \vspace{1.2mm}%
     }%
@@ -205,7 +205,7 @@ The remaining columns cover administrative IDs, survey protocol and weights; per
 \begin{multicols}{2}
 
 \ReportSection{5}{Missingness and incomplete observation}
-No CSV cells are blank; incompleteness uses five negative codes, which must remain distinct. Percentages use all selected EVS cells: $n \times p = 59{,}438 \times 231 = \mathbf{13{,}730{,}178}$ (rows $\times$ delivered columns). For example, $303{,}010 / 13{,}730{,}178 = 2.21\%$ for code $-1$.
+No CSV cells are blank; incompleteness uses five negative codes, which must remain distinct. Percentages use the raw EVS slice (231 delivered columns, before five WVS-only columns are dropped): $59{,}438 \times 231 = \mathbf{13{,}730{,}178}$ cells. For example, $303{,}010 / 13{,}730{,}178 = 2.21\%$ for code $-1$.
 
 \begin{MissingTable}{L{0.11\linewidth}L{0.34\linewidth}L{0.25\linewidth}Y}
 \TableHead{Code} & \TableHead{Meaning} & \TableHead{Cells} & \TableHead{Share of total}\\
