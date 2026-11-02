@@ -1,0 +1,17 @@
+Directory: 02_develop/subject
+Purpose: Original Model Development Report assignment briefs for 4EK481 & 4EK666 Modelling in Data Science.
+
+Source:
+https://moodle.vse.cz/course/view.php?id=24132&section_id=167422
+
+Stored files
+------------
+
+1. model_development_report_part1_models.pdf
+   Title: Model Development Report - Part I: Models
+
+2. model_development_report_part2_train.pdf
+   Title: Model Development Report - Part II: Training and Tuning
+
+3. model_development_report_part3_production.pdf
+   Title: Model Development Report - Part III: Production

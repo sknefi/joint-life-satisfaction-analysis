@@ -1,10 +1,10 @@
-# Semester project: Joint EVS/WVS data understanding
+# Semester project: EVS life satisfaction analysis
 
-This repository supports the data-understanding stage of a university Data Science project using the Joint EVS/WVS 2017-2022 Dataset, Version 5.0.0.
+This repository supports a university Data Science project using the Joint EVS/WVS 2017-2022 Dataset, Version 5.0.0. Work is organized into four course stages: Define, Develop, Assure, and Operate. The implemented analysis and completed reports are currently in Define.
 
-The project uses the EVS 2017 portion of the joint file as its primary analytical sample. The current research question is:
+The project uses the EVS portion of the joint file, with fieldwork during 2017-2021, as its primary analytical sample. The current research question is:
 
-> Which demographic, socioeconomic, and social characteristics are associated with life satisfaction among respondents in EVS 2017, and how stable are these relationships across participating countries?
+> Which demographic, socioeconomic, and social characteristics are associated with life satisfaction among EVS respondents, and how stable are these relationships across participating countries?
 
 The likely response variable is `A170`, satisfaction with life. EVS is selected in analysis code using `study == 1`; the joint raw CSV remains unchanged. The EVS subset contains 59,438 respondents from 36 participating countries. The project currently focuses on understanding the data rather than fitting a machine-learning model or making causal claims.
 
@@ -14,9 +14,10 @@ The likely response variable is `A170`, satisfaction with life. EVS is selected 
 |---|---|---|
 | `data/raw/evs_wvs_dataset.csv` | EVS/WVS Joint v5.0 CSV dataset | [World Values Survey: Joint EVS/WVS 2017-2022](https://www.worldvaluessurvey.org/WVSEVSjoint2017.jsp) |
 | `docs/ZA7505_cdb.pdf` | EVS/WVS Joint v5.0 variable report/codebook | [World Values Survey: Joint EVS/WVS 2017-2022](https://www.worldvaluessurvey.org/WVSEVSjoint2017.jsp) |
-| `docs/subject/problem_definition_report_part1_data.pdf` | University assignment: Problem Definition Report, Part I - Data | [VSE Moodle](https://moodle.vse.cz/mod/folder/view.php?id=857464) |
+| `01_define/subject/` | Problem Definition Report assignment briefs (Parts I and II) | [VSE Moodle](https://moodle.vse.cz/mod/folder/view.php?id=857464) |
+| `02_develop/subject/` | Model Development Report assignment briefs (Parts I-III) | [VSE Moodle](https://moodle.vse.cz/mod/folder/view.php?id=857464) |
 
-The accompanying `info.txt` files record the source and original description of each downloaded artifact.
+The accompanying `info.txt` files identify the downloaded source files and their origins.
 
 Treat everything under `data/raw/` as immutable source data. Analysis code must read the CSV without modifying or replacing it. In particular, the official negative missing-value codes must not be overwritten in the raw file.
 
@@ -26,6 +27,22 @@ The joint CSV remains the only source of truth. `make data` creates an EVS-only 
 
 ```text
 .
+├── 01_define
+│   ├── subject                   # Problem Definition briefs
+│   ├── report                    # LaTeX sources and generated EVS profile
+│   └── output                    # Rendered PDFs; kept locally
+├── 02_develop
+│   ├── subject                   # Model Development briefs
+│   ├── report
+│   └── output
+├── 03_assure
+│   ├── subject
+│   ├── report
+│   └── output
+├── 04_operate
+│   ├── subject
+│   ├── report
+│   └── output
 ├── Makefile
 ├── README.md
 ├── requirements.txt
@@ -36,11 +53,8 @@ The joint CSV remains the only source of truth. `make data` creates an EVS-only 
 │       ├── evs_wvs_dataset.csv
 │       └── info.txt
 ├── docs
-│   ├── ZA7505_cdb.pdf
-│   ├── info.txt
-│   └── subject
-│       ├── info.txt
-│       └── problem_definition_report_part1_data.pdf
+│   ├── ZA7505_cdb.pdf           # Shared dataset codebook
+│   └── info.txt
 ├── scripts
 │   ├── build_evs_parquet.py
 │   └── profile_dataset.py
@@ -112,7 +126,7 @@ The explicit equivalent is:
 make profile
 ```
 
-Print the EVS profile and save it to `reports/data_profile_evs.md`:
+Print the EVS profile and save it to `01_define/report/data_profile_evs.md`:
 
 ```bash
 make report
@@ -132,7 +146,7 @@ The Python script can also be run directly:
 
 ```bash
 python scripts/profile_dataset.py --study EVS
-python scripts/profile_dataset.py --study EVS --output reports/data_profile_evs.md
+python scripts/profile_dataset.py --study EVS --output 01_define/report/data_profile_evs.md
 python scripts/profile_dataset.py --study all
 ```
 

@@ -1,7 +1,7 @@
 PYTHON := .venv/bin/python
 PROFILE_SCRIPT := scripts/profile_dataset.py
 DATA_SCRIPT := scripts/build_evs_parquet.py
-PROFILE_REPORT := reports/data_profile_evs.md
+PROFILE_REPORT := 01_define/report/data_profile_evs.md
 PARQUET_DATA := data/processed/evs_v5_0.parquet
 REQUIREMENTS_STAMP := .venv/.requirements-installed
 

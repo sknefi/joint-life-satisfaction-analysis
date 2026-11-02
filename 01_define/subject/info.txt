@@ -1,4 +1,4 @@
-Directory: docs/subject
+Directory: 01_define/subject
 Purpose: Original seminar-assignment briefs for 4EK481 & 4EK666 Modelling in Data Science.
 
 Source:
