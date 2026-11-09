@@ -61,6 +61,8 @@ Boosting caps iterations at 200, uses 15% internal training-fold validation, pat
 
 | with_happiness | 1.102 | 1.625 | 0.0870 |
 
+| demographics_only | 1.470 | 1.909 | 0.1160 |
+
 Sensitivity fits reuse the selected family's hyperparameters without retuning; differences assess predictor availability, not separately optimized competitors. Adding happiness tests near-proxy dependence; removing subjective inputs tests whether survey-like subjective answers are essential.
 
 ![Training-only CV curve](../figures/cv_curve.png)
@@ -73,6 +75,8 @@ Sensitivity fits reuse the selected family's hyperparameters without retuning; d
 <b>Fitted ordinal parameters:</b> largest absolute coefficients A009_5=-1.530; A173_10=+1.457; A009_1=+1.324; nine cutpoints [-3.77, -3.24, -2.55, -1.97, -0.98, -0.30, 0.68, 2.00, 3.07]. <b>Huber:</b> rank 73, start=OLS, L-BFGS-B, delta=1, maxiter=3000, ftol=1e-12, gtol=1e-7; 310 iterations, objective 0.8636, max gradient 2.5e-07; success=True. OLS is a closed-form rank-revealing least-squares solve. Both objectives are convex; multiple local starts are unnecessary.
 
 <b>Seeds 42/2026/2027:</b> forest: CV MAE 1.2490-1.2514; full-training log loss best 1.5243, range 0.0009; boosting: CV MAE 1.2244-1.2286; full-training log loss best 1.6144, range 0.0053. These are stability checks of greedy randomized procedures, not a global optimum claim; no new model was selected.
+
+<b>Define continuity checks:</b> the strictly demographic benchmark uses sex, age, education and country, excluding income/employment. All 30 training countries have OOF reliability bins in calibration_country_cv.csv (sparse bins flagged). The income gap is 34.24 pp at scores 7-10 and 34.75 pp at 8-10; the paid-work gap is 18.67 and 15.44 pp respectively. Weighted medians are 8 versus 7 for high/low income and 8 versus 7 for paid work/unemployment. The directions persist, not the gap sizes. Full 1-10 group distributions and threshold summaries are saved; these are descriptive training diagnostics, not new uncertainty or causal estimates.
 
 Software/functions: custom OrdinalLogit.objective with scipy.optimize.minimize; sklearn.ensemble.RandomForestClassifier / HistGradientBoostingClassifier; scipy.linalg.lstsq and minimize for the criterion supplement. Complete defaults/non-defaults and fitted parameter arrays are saved as JSON. Greedy trees have no interchangeable continuous solver or global convergence certificate.
 

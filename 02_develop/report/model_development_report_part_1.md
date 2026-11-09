@@ -21,7 +21,7 @@
 
 Predict after an EVS-style respondent has answered the non-target questions, before A170 is observed. Intended use is a research demonstration and possible future imputation research, conditional on validation. It is not an intervention recommendation or a claim about present-day populations.
 
-<b>Core inputs:</b> X001 sex; X003 age; X025R education; X028 employment; X047E_EVS5 household-income decile; A009 health; A165 trust; A173 control; cntry_AN country. Exclude IDs, weights, fieldwork dates, year and interview mode from the primary model. A008 happiness is a separate near-proxy sensitivity analysis; a demographic/economic-only specification tests dependence on subjective items.
+<b>Core inputs:</b> X001 sex; X003 age; X025R education; X028 employment; X047E_EVS5 household-income decile; A009 health; A165 trust; A173 control; cntry_AN country. Exclude IDs, weights, fieldwork dates, year and interview mode from the primary model. A008 happiness is a separate near-proxy sensitivity analysis; separate demographic/economic and strictly demographic benchmarks test input availability. Define listed year/mode as context candidates; the primary model retains country and omits fieldwork metadata to reduce reliance on collection protocol.
 
 <b>Representation:</b> age and age squared, median-imputed within each training fold, standardized using that fold; a missing-age indicator. Other survey codes are explicitly one-hot encoded, including a missing category. Category codes are not assumed to be equally spaced. Age 82 denotes 82+. The raw CSV and its negative missing codes remain immutable.
 

@@ -8,7 +8,7 @@ REQUIREMENTS_STAMP := $(dir $(PYTHON)).project-installed
 
 .DEFAULT_GOAL := profile
 
-.PHONY: profile profile-all report data setup test check help train inference audit-supplements develop-reports predict-example verify-production package submission
+.PHONY: profile profile-all report data setup test check help train inference audit-supplements define-continuity develop-reports predict-example verify-production package submission
 
 profile: $(PYTHON)
 	@$(PYTHON) $(PROFILE_SCRIPT) --study EVS
@@ -68,6 +68,9 @@ inference: $(REQUIREMENTS_STAMP)
 
 audit-supplements: $(REQUIREMENTS_STAMP)
 	@OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 $(PYTHON) scripts/run_audit_supplements.py
+
+define-continuity: $(REQUIREMENTS_STAMP)
+	@OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 $(PYTHON) scripts/check_define_continuity.py
 
 develop-reports: $(REQUIREMENTS_STAMP)
 	@MPLCONFIGDIR=.cache/matplotlib $(PYTHON) scripts/build_develop_reports.py

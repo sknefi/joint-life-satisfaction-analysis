@@ -4,7 +4,7 @@
 
 ## 1. Product and intended user
 
-An installable, versioned Python repository for students/researchers reproducing EVS life-satisfaction analysis or predicting an omitted A170 response for an EVS-style respondent. Package release 0.1.1 includes the unchanged v0.1.0 Part II boosting model and its complete preprocessing. There is no hosted service or deployment. Repository: <link href='https://github.com/sknefi/joint-life-satisfaction-analysis' color='#168C8C'>github.com/sknefi/joint-life-satisfaction-analysis</link>.
+An installable, versioned Python repository for students/researchers reproducing EVS life-satisfaction analysis or predicting an omitted A170 response for an EVS-style respondent. Package release 0.1.2 includes the unchanged v0.1.0 Part II boosting model and its complete preprocessing. There is no hosted service or deployment. Repository: <link href='https://github.com/sknefi/joint-life-satisfaction-analysis' color='#168C8C'>github.com/sknefi/joint-life-satisfaction-analysis</link>.
 
 
 ## 2. Install and run

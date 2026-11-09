@@ -1,0 +1,261 @@
+{
+  "analysis_partition": "train only",
+  "calibration_countries": 30,
+  "contrasts": [
+    {
+      "contrast": "income_high_minus_low",
+      "gap_threshold_7": 0.3423957332085039,
+      "gap_threshold_8": 0.3475309358831235,
+      "median_high_group": 8,
+      "median_low_group": 7
+    },
+    {
+      "contrast": "paid_minus_unemployed",
+      "gap_threshold_7": 0.18667629696332189,
+      "gap_threshold_8": 0.15444821990060398,
+      "median_high_group": 8,
+      "median_low_group": 7
+    }
+  ],
+  "countries": 30,
+  "demographics_only_cv": {
+    "diagnostics": [
+      {
+        "algorithm": "histogram gradient boosting",
+        "early_stopping": true,
+        "expanded_features": 41,
+        "iterations": 50,
+        "settings": {
+          "categorical_features": null,
+          "class_weight": null,
+          "early_stopping": true,
+          "interaction_cst": null,
+          "l2_regularization": 1.0,
+          "learning_rate": 0.1,
+          "loss": "log_loss",
+          "max_bins": 255,
+          "max_depth": null,
+          "max_features": 1.0,
+          "max_iter": 200,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 50,
+          "monotonic_cst": null,
+          "n_iter_no_change": 15,
+          "random_state": 42,
+          "scoring": "loss",
+          "tol": 1e-07,
+          "validation_fraction": 0.15,
+          "verbose": 0,
+          "warm_start": false
+        },
+        "trees": 500,
+        "validation_loss_final": 1.9226018990584406,
+        "validation_loss_initial": 1.9966893855023968
+      },
+      {
+        "algorithm": "histogram gradient boosting",
+        "early_stopping": true,
+        "expanded_features": 41,
+        "iterations": 44,
+        "settings": {
+          "categorical_features": null,
+          "class_weight": null,
+          "early_stopping": true,
+          "interaction_cst": null,
+          "l2_regularization": 1.0,
+          "learning_rate": 0.1,
+          "loss": "log_loss",
+          "max_bins": 255,
+          "max_depth": null,
+          "max_features": 1.0,
+          "max_iter": 200,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 50,
+          "monotonic_cst": null,
+          "n_iter_no_change": 15,
+          "random_state": 42,
+          "scoring": "loss",
+          "tol": 1e-07,
+          "validation_fraction": 0.15,
+          "verbose": 0,
+          "warm_start": false
+        },
+        "trees": 440,
+        "validation_loss_final": 1.925987446554318,
+        "validation_loss_initial": 1.9973729654065844
+      },
+      {
+        "algorithm": "histogram gradient boosting",
+        "early_stopping": true,
+        "expanded_features": 41,
+        "iterations": 48,
+        "settings": {
+          "categorical_features": null,
+          "class_weight": null,
+          "early_stopping": true,
+          "interaction_cst": null,
+          "l2_regularization": 1.0,
+          "learning_rate": 0.1,
+          "loss": "log_loss",
+          "max_bins": 255,
+          "max_depth": null,
+          "max_features": 1.0,
+          "max_iter": 200,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 50,
+          "monotonic_cst": null,
+          "n_iter_no_change": 15,
+          "random_state": 42,
+          "scoring": "loss",
+          "tol": 1e-07,
+          "validation_fraction": 0.15,
+          "verbose": 0,
+          "warm_start": false
+        },
+        "trees": 480,
+        "validation_loss_final": 1.9237239041949188,
+        "validation_loss_initial": 1.9989527037377532
+      },
+      {
+        "algorithm": "histogram gradient boosting",
+        "early_stopping": true,
+        "expanded_features": 41,
+        "iterations": 54,
+        "settings": {
+          "categorical_features": null,
+          "class_weight": null,
+          "early_stopping": true,
+          "interaction_cst": null,
+          "l2_regularization": 1.0,
+          "learning_rate": 0.1,
+          "loss": "log_loss",
+          "max_bins": 255,
+          "max_depth": null,
+          "max_features": 1.0,
+          "max_iter": 200,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 50,
+          "monotonic_cst": null,
+          "n_iter_no_change": 15,
+          "random_state": 42,
+          "scoring": "loss",
+          "tol": 1e-07,
+          "validation_fraction": 0.15,
+          "verbose": 0,
+          "warm_start": false
+        },
+        "trees": 540,
+        "validation_loss_final": 1.9264234531565356,
+        "validation_loss_initial": 2.0004154387409665
+      },
+      {
+        "algorithm": "histogram gradient boosting",
+        "early_stopping": true,
+        "expanded_features": 41,
+        "iterations": 49,
+        "settings": {
+          "categorical_features": null,
+          "class_weight": null,
+          "early_stopping": true,
+          "interaction_cst": null,
+          "l2_regularization": 1.0,
+          "learning_rate": 0.1,
+          "loss": "log_loss",
+          "max_bins": 255,
+          "max_depth": null,
+          "max_features": 1.0,
+          "max_iter": 200,
+          "max_leaf_nodes": 15,
+          "min_samples_leaf": 50,
+          "monotonic_cst": null,
+          "n_iter_no_change": 15,
+          "random_state": 42,
+          "scoring": "loss",
+          "tol": 1e-07,
+          "validation_fraction": 0.15,
+          "verbose": 0,
+          "warm_start": false
+        },
+        "trees": 490,
+        "validation_loss_final": 1.9221682207163877,
+        "validation_loss_initial": 2.0020159997657103
+      }
+    ],
+    "features": [
+      "X001",
+      "X003",
+      "X025R",
+      "cntry_AN"
+    ],
+    "folds": [
+      {
+        "high_brier": 0.18163459371415724,
+        "log_loss": 1.9246215305493743,
+        "mae": 1.4913597733711048,
+        "n_train": 27680,
+        "n_validation": 7060,
+        "rps": 0.11789022472602784,
+        "seconds": 4.435628999955952
+      },
+      {
+        "high_brier": 0.17916360753861096,
+        "log_loss": 1.9086049310596256,
+        "mae": 1.47712045616536,
+        "n_train": 27725,
+        "n_validation": 7015,
+        "rps": 0.11651979855915924,
+        "seconds": 3.95990979205817
+      },
+      {
+        "high_brier": 0.17925907107391278,
+        "log_loss": 1.9069800338683343,
+        "mae": 1.4698691212426291,
+        "n_train": 27787,
+        "n_validation": 6953,
+        "rps": 0.11614206835535226,
+        "seconds": 4.3238025000318885
+      },
+      {
+        "high_brier": 0.1786811016860268,
+        "log_loss": 1.9030896865201217,
+        "mae": 1.4681963404008131,
+        "n_train": 27854,
+        "n_validation": 6886,
+        "rps": 0.11528492425209323,
+        "seconds": 4.611591250170022
+      },
+      {
+        "high_brier": 0.1777266000168321,
+        "log_loss": 1.900497195027063,
+        "mae": 1.4411075300322298,
+        "n_train": 27914,
+        "n_validation": 6826,
+        "rps": 0.1141536366357061,
+        "seconds": 3.3675589580088854
+      }
+    ],
+    "high_brier": 0.17929299480590796,
+    "log_loss": 1.9087586754049037,
+    "mae": 1.4695306442424276,
+    "mae_se": 0.008197208300297456,
+    "model": "boosting",
+    "parameters": {
+      "l2_regularization": 1.0,
+      "learning_rate": 0.1,
+      "max_leaf_nodes": 15,
+      "min_samples_leaf": 50
+    },
+    "rps": 0.11599813050566773
+  },
+  "demographics_only_features": [
+    "X001",
+    "X003",
+    "X025R",
+    "cntry_AN"
+  ],
+  "final_tests_evaluated": false,
+  "frozen_model_reselected": false,
+  "group_distribution_rows": 5930,
+  "limitations": "Threshold/median comparisons are descriptive sensitivity checks, not new causal claims or uncertainty intervals; country CV calibration is a tuned-training diagnostic.",
+  "n": 34740
+}

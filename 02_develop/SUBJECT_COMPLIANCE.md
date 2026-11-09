@@ -1,6 +1,6 @@
 # Develop subject compliance audit
 
-Audit date: 9 November 2026. Audited package/report revision: **v0.1.1**.
+Audit date: 9 November 2026. Audited package/report revision: **v0.1.2**.
 The Part II prediction model is the unchanged frozen v0.1.0 artifact; the audit
 does not reselect it after production validation. No promise of a grade is made.
 
@@ -81,3 +81,13 @@ Source: `subject/model_development_report_part3_production.pdf`.
 6. **Scientific limits remain:** unidentifiable employment intervention, potentially
    MNAR/nonresponse bias, imperfect calibration and unavailable full survey design.
    These are disclosed limits of the evidence, not claims that the data were fixed.
+
+## Define continuity addendum (v0.1.2)
+
+The detailed crosswalk is in `DEFINE_TO_DEVELOP.md`. The additional strictly
+demographic benchmark closes the distinction from the demographic/economic
+variant; group distributions, weighted medians, threshold sensitivity and
+country-specific training OOF calibration now directly address Define's stated
+checks. The revised 30-country inference remains an explicitly declared change,
+not fulfilment of the original all-36-country estimand. Assure tests, fully
+design-aware uncertainty and later-wave validation remain pending as labelled.

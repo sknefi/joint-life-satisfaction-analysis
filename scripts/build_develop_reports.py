@@ -121,7 +121,7 @@ def part_one():
         ], [.22, .44, .34]),
         heading("2. Prediction case and information available"),
         body("Predict after an EVS-style respondent has answered the non-target questions, before A170 is observed. Intended use is a research demonstration and possible future imputation research, conditional on validation. It is not an intervention recommendation or a claim about present-day populations."),
-        body("<b>Core inputs:</b> X001 sex; X003 age; X025R education; X028 employment; X047E_EVS5 household-income decile; A009 health; A165 trust; A173 control; cntry_AN country. Exclude IDs, weights, fieldwork dates, year and interview mode from the primary model. A008 happiness is a separate near-proxy sensitivity analysis; a demographic/economic-only specification tests dependence on subjective items."),
+        body("<b>Core inputs:</b> X001 sex; X003 age; X025R education; X028 employment; X047E_EVS5 household-income decile; A009 health; A165 trust; A173 control; cntry_AN country. Exclude IDs, weights, fieldwork dates, year and interview mode from the primary model. A008 happiness is a separate near-proxy sensitivity analysis; separate demographic/economic and strictly demographic benchmarks test input availability. Define listed year/mode as context candidates; the primary model retains country and omits fieldwork metadata to reduce reliance on collection protocol."),
         body("<b>Representation:</b> age and age squared, median-imputed within each training fold, standardized using that fold; a missing-age indicator. Other survey codes are explicitly one-hot encoded, including a missing category. Category codes are not assumed to be equally spaced. Age 82 denotes 82+. The raw CSV and its negative missing codes remain immutable."),
         heading("3. Frozen evaluation protocol"),
         body("Seed 42 selects six countries using country labels only for a final transfer test. In the remaining 30, valid-target respondents are partitioned within country x outcome strata: approximately 70% training, 10% production validation, 20% final same-country test. Rounding is documented. Missing targets are excluded from prediction fitting; missing predictors do not cause complete-case deletion."),
@@ -163,6 +163,8 @@ def part_two():
     selection, splits, run = read("selection.json"), read("splits.json"), read("run.json")
     alt, sensitivity, inference = read("alternative_criterion.json"), read("sensitivity.json"), read("inference.json")
     loss = read("loss_sensitivity.json")
+    continuity = read("define_continuity.json")
+    sensitivity = [*sensitivity, {"specification": "demographics_only", **continuity["demographics_only_cv"]}]
     grouped, counts = read("country_cv.json"), splits["counts"]
     candidates = selection["candidates"]
     rows = []
@@ -213,6 +215,7 @@ def part_two():
         body(optimizer_text()),
         body(parameter_text(), True),
         body(seed_text(), True),
+        body(continuity_text(), True),
         body("Software/functions: custom OrdinalLogit.objective with scipy.optimize.minimize; sklearn.ensemble.RandomForestClassifier / HistGradientBoostingClassifier; scipy.linalg.lstsq and minimize for the criterion supplement. Complete defaults/non-defaults and fitted parameter arrays are saved as JSON. Greedy trees have no interchangeable continuous solver or global convergence certificate.", True),
     ], [
         heading("6. Transfer diagnostics and uncertainty"),
@@ -266,6 +269,19 @@ def seed_text():
     return "<b>Seeds 42/2026/2027:</b> " + "; ".join(parts) + ". These are stability checks of greedy randomized procedures, not a global optimum claim; no new model was selected."
 
 
+
+def continuity_text():
+    c = read("define_continuity.json")
+    income, employment = c['contrasts']
+    return ("<b>Define continuity checks:</b> the strictly demographic benchmark uses sex, age, education and country, excluding income/employment. "
+            f"All 30 training countries have OOF reliability bins in calibration_country_cv.csv (sparse bins flagged). "
+            f"The income gap is {100*income['gap_threshold_7']:.2f} pp at scores 7-10 and {100*income['gap_threshold_8']:.2f} pp at 8-10; "
+            f"the paid-work gap is {100*employment['gap_threshold_7']:.2f} and {100*employment['gap_threshold_8']:.2f} pp respectively. "
+            f"Weighted medians are {income['median_high_group']} versus {income['median_low_group']} for high/low income and "
+            f"{employment['median_high_group']} versus {employment['median_low_group']} for paid work/unemployment. "
+            "The directions persist, not the gap sizes. Full 1-10 group distributions and threshold summaries are saved; these are descriptive training diagnostics, not new uncertainty or causal estimates.")
+
+
 def income_text():
     s = read("income_sensitivity.json")
     return (f"Income is missing in 14.70% of the original EVS subset. For the revised training-country inference, size-weighted high-satisfaction proportions are {100*s['income_observed']['estimate']:.2f}% with observed income and {100*s['income_missing']['estimate']:.2f}% with missing income. This diagnoses a potentially selected complete-case population; it does not identify an MNAR correction.")
@@ -277,7 +293,7 @@ def part_three():
     qa = read("production_checks.json")
     pages = [[
         heading("1. Product and intended user"),
-        body(f"An installable, versioned Python repository for students/researchers reproducing EVS life-satisfaction analysis or predicting an omitted A170 response for an EVS-style respondent. Package release 0.1.1 includes the unchanged v0.1.0 Part II {selected['selected']} model and its complete preprocessing. There is no hosted service or deployment. Repository: <link href='https://github.com/sknefi/joint-life-satisfaction-analysis' color='#168C8C'>github.com/sknefi/joint-life-satisfaction-analysis</link>."),
+        body(f"An installable, versioned Python repository for students/researchers reproducing EVS life-satisfaction analysis or predicting an omitted A170 response for an EVS-style respondent. Package release 0.1.2 includes the unchanged v0.1.0 Part II {selected['selected']} model and its complete preprocessing. There is no hosted service or deployment. Repository: <link href='https://github.com/sknefi/joint-life-satisfaction-analysis' color='#168C8C'>github.com/sknefi/joint-life-satisfaction-analysis</link>."),
         heading("2. Install and run"),
         ("code", "python3.12 -m venv .venv\nsource .venv/bin/activate\npython -m pip install -r requirements-model-lock.txt\npython -m pip install --no-deps .\nevs-predict --input examples/respondents.csv --output predictions.csv\npython -m unittest discover -s tests -p 'test_*.py'"),
         body("Download/unzip the submission kit or clone the repository first; run commands from its root. The kit also contains a pip-installable wheel and synthetic saved reference cases. The model artifact lives in models/; default paths assume the repository root. Elsewhere pass --model /path/to/evs_v0_1_0.joblib. The notebook notebooks/quickstart.ipynb demonstrates synthetic profiles without requiring the respondent dataset. Source data access instructions and immutable-source rules are in data/README.md; make data, train, inference and develop-reports reproduce the analysis locally."),

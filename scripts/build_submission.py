@@ -15,7 +15,7 @@ archive = folder / f'filip_karika_develop_v{__version__}.zip'
 prefix = f'evs-develop-v{__version__}'
 files = set()
 for name in ('.gitattributes', '.gitignore', 'Makefile', 'README.md', 'pyproject.toml', 'requirements.txt',
-             'requirements-lock.txt', 'requirements-model-lock.txt', 'data/README.md', '02_develop/SUBJECT_COMPLIANCE.md'):
+             'requirements-lock.txt', 'requirements-model-lock.txt', 'data/README.md', '02_develop/SUBJECT_COMPLIANCE.md', '02_develop/DEFINE_TO_DEVELOP.md'):
     files.add(ROOT / name)
 for pattern in ('src/**/*.py', 'scripts/*.py', 'tests/*.py', '.github/workflows/*.yml',
                 'examples/*.csv', 'models/*', 'notebooks/*.ipynb', '02_develop/report/*.md',

@@ -60,7 +60,7 @@ Later periods, new countries and different questionnaires require validation.
 
 ## Develop results and reproduction
 
-Package release **v0.1.1** strengthens the subject audit while retaining the unchanged v0.1.0 Part II model.
+Package release **v0.1.2** strengthens the subject audit while retaining the unchanged v0.1.0 Part II model.
 
 The frozen choice is histogram gradient boosting, trained on **34,740** cases.
 Five-fold **training-only** CV MAEs are baseline **1.565**, ordinal **1.255**,
@@ -94,6 +94,7 @@ make data
 make train
 make inference
 make audit-supplements
+make define-continuity
 make verify-production
 make develop-reports
 make package
@@ -126,7 +127,7 @@ nested estimate after hyperparameter selection.
 
 GitHub Actions runs the installed package tests on synthetic fixtures and the
 released example; it does not download the survey or retrain on private data.
-Tag `v0.1.0` identifies the original frozen model; `v0.1.1` is the audited package/report revision. The code is installable
+Tag `v0.1.0` identifies the original frozen model; `v0.1.2` is the audited package/report and Define-continuity revision. The code is installable
 with pip from the repository; it is not published to PyPI.
 
 ## Data and documentation
@@ -320,3 +321,18 @@ run result has not been authenticated/verified in this session. A Git tag is
 provided; the standalone release kit supplies the installable artifact without
 requiring a separately created GitHub Releases page. Moodle submission/deadline
 and the teacher's access must be confirmed by the student.
+
+## Continuity with Define
+
+See `02_develop/DEFINE_TO_DEVELOP.md` for the explicit original-to-current
+crosswalk. The 36-country source scope is unchanged, while fitted inference is
+explicitly narrowed to the 30 training countries. Year and interview mode were
+candidates, not mandatory predictors, and are omitted from the primary model.
+The strictly demographic benchmark (sex/age/education plus country) has CV MAE
+1.470; the separate demographic/economic model remains at 1.447.
+
+Full 1-10 distributions, weighted medians, thresholds 7 and 8, and country-level
+training OOF calibration are saved as aggregate diagnostics. Both reported
+income/employment contrast directions persist under the alternate threshold and
+median, although gap sizes differ. Final-test and later-wave validation remain
+future evaluation; none is claimed complete in Develop.
