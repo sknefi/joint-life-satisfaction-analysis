@@ -65,7 +65,7 @@ def render(part, subtitle, pages):
                 markdown.append("```text\n" + block[1] + "\n```")
             elif block[0] == "image":
                 story.append(Image(str(block[1]), width=block[2], height=block[3], hAlign="CENTER"))
-                markdown.append(f"![{block[4]}]({Path(block[1]).name})")
+                markdown.append(f"![{block[4]}](../figures/{Path(block[1]).name})")
             else:
                 _, headers, rows, widths = block
                 widths = [width * v for v in widths] if widths else [width / len(headers)] * len(headers)

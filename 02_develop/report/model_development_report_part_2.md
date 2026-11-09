@@ -69,7 +69,7 @@ Initial search and one-step boundary extensions follow Part I. Every candidate u
 
 Sensitivity fits reuse the selected family's hyperparameters without retuning; differences assess predictor availability, not separately optimized competitors. Adding happiness tests near-proxy dependence; removing subjective inputs tests whether survey-like subjective answers are essential.
 
-![Training-only CV curve](cv_curve.png)
+![Training-only CV curve](../figures/cv_curve.png)
 
 
 ## 5. Optimization and fitted parameters
