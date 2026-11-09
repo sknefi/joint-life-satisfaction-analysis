@@ -116,7 +116,7 @@ def part_one():
         body("<b>Data and scope.</b> Joint EVS/WVS 2017-2022 v5.0.0, EVS records only (study = 1): 59,438 respondents in 36 countries, fieldwork 2017-2021. One row is one person; this is a clustered pooled cross-section, not a longitudinal panel. The response is A170, ordinal life satisfaction 1-10."),
         table(["Question / goal", "Approach and rationale", "Critical assumption"], [
             ["Prediction: an unseen EVS-style respondent in a represented country", "Empirical median/frequency baseline; regularized ordinal logistic; random forest; histogram gradient boosting", "Inputs known after the non-target questionnaire; relationships and measurement transfer to unseen respondents."],
-            ["Inference: population proportions with A170 >= 7, and income/employment gaps", "Country-specific weighted ratios; equal-country pooling; population-size-weighted sensitivity; approximate bootstrap uncertainty", "Survey weights adequately adjust observed margins; residual selection and within-country dependence remain limitations."],
+            ["Inference: population proportions with A170 >= 7, and income/employment gaps", "Training-only country-weighted ratios; equal-country and population-size pooling; approximate bootstrap uncertainty", "Survey weights adequately adjust observed margins; residual selection and within-country dependence remain limitations."],
             ["Causality: effect of obtaining paid work among initially unemployed adults", "Not identified by EVS; propose a prospective panel / target trial with pre-employment adjustment", "Temporal ordering, pre-treatment common causes, overlap, consistency and no material spillovers."],
         ], [.22, .44, .34]),
         heading("2. Prediction case and information available"),
@@ -129,28 +129,29 @@ def part_one():
     ], [
         heading("4. Candidate assumptions, objectives and possible failures"),
         table(["Candidate", "Assumptions and consequences", "Repair / verdict"], [
-            ["Baseline", "Training outcome frequencies transfer. A global median ignores country and individual variation: potentially high bias, low variance.", "Mandatory benchmark; assumptions plausible only as a reference."],
-            ["Ordinal logistic (all-threshold, L2)", "One additive latent score with ordered logistic thresholds; shared slopes across thresholds. Missed nonlinearities/interactions or threshold-specific effects create bias. L2 reduces variance; probabilities need calibration checks.", "Quadratic age and explicit categories; tune L2. Violations may be harmful; compare with flexible candidates."],
-            ["Random forest classifier", "Enough observations support local partitions and interactions. Sparse subgroups and deep trees increase variance; leaf averaging can flatten extremes. Classifier does not exploit outcome order during fitting.", "Limit depth, impose substantial leaf sizes, average 200 trees; judge on ordinal-aware metrics. Assumptions plausible with regularization."],
-            ["Histogram gradient boosting classifier", "Useful signal can be approximated by shallow interactions. Sequential fitting can overfit noise; nominal multiclass loss does not encode score distance. No reliable extrapolation to new contexts.", "Small learning rates and trees, regularization and fold-local early stopping. Plausible, with careful tuning and group validation."],
+            ["Baseline", "Training outcome frequencies transfer. A global median ignores country and individual variation: potentially high bias, low variance.", "Mandatory benchmark. Verdict: Assumptions plausible as a reference."],
+            ["Ordinal logistic (all-threshold, L2)", "One additive latent score with ordered logistic thresholds; shared slopes across thresholds. Missed nonlinearities/interactions or threshold-specific effects create bias. L2 reduces variance; probabilities need calibration checks.", "Quadratic age, explicit categories, L2 tuning and flexible comparisons. Verdict: Assumptions plausible for same-wave prediction; shared slopes remain a testable risk."],
+            ["Random forest classifier", "Enough observations support local partitions and interactions. Sparse subgroups and deep trees increase variance; leaf averaging can flatten extremes. Classifier does not exploit outcome order during fitting.", "Limit depth and leaf size; average 200 trees; evaluate ordinal errors. Verdict: Assumptions plausible with regularization."],
+            ["Histogram gradient boosting classifier", "Useful signal can be approximated by shallow interactions. Sequential fitting can overfit noise; nominal multiclass loss does not encode score distance. No reliable extrapolation to new contexts.", "Small trees/rates, L2 and fold-local stopping. Verdict: Assumptions plausible for represented-country cases; transfer remains uncertain."],
         ], [.21, .48, .31]),
         body("<b>Objectives:</b> baseline median minimizes empirical absolute error; its probabilities are empirical frequencies. The ordinal estimator minimizes the sum of nine binary threshold logistic losses plus alpha/2 times squared coefficient norm (an all-threshold surrogate, not exact categorical ordered-logit likelihood). Forests greedily reduce Gini impurity. Boosting minimizes multiclass log loss through successive trees."),
         body("<b>Alternative criterion:</b> refit the selected forest configuration with Shannon entropy instead of Gini. Keep its other hyperparameters fixed to isolate the criterion change. This compares local split objectives, not two globally optimized forest likelihoods. Evaluate probability and point-prediction differences out of fold."),
+        body("<b>Revision note:</b> the audit additionally compares squared and Huber (delta=1) objectives on the identical numeric linear specification. This is a training-only criterion sensitivity added after the original Part I, not another tuned candidate or a reason to reopen production validation."),
         heading("5. Tuning, success and expected ranking"),
         body("Initial search: ordinal alpha {0.1, 1, 10, 100}; forest 200 trees, depth {6,10}, minimum leaf {20,50}, max_features {sqrt,0.7}; boosting eight seeded combinations of learning_rate {0.05,0.1}, leaves {7,15}, minimum leaf {50,100}, L2 {0,1}; up to 200 iterations. A pre-specified one-step outward extension follows boundary optima. Tree extension changes depth/leaf-size together as a bounded sensitivity, not an exhaustive expanded grid."),
         body("<b>Selection:</b> minimize mean CV MAE of the predicted distribution's median; break exact metric ties using RPS. Prefer ordinal if within one standard error of the best candidate. Retain baseline if no model improves it. Report log loss, normalized ranked probability score (RPS), Brier score for A170 >= 7, calibration and subgroup error. Probabilities are estimated distributions, not a confidence interval for an individual's outcome."),
         body("<b>Expectation:</b> boosting may win through nonlinear health/control/income interactions; ordinal may be competitive because self-report noise limits useful complexity; forest may be more conservative. Similar CV errors, poor calibration, or worse country transfer would change this ranking. No performance claim is made before fitting."),
     ], [
         heading("6. Inference: estimand, weighting and uncertainty"),
-        body("Estimate country-specific proportions of A170 scores 7-10 and marginal income/employment differences among adults in private households represented by the 36 EVS country surveys during 2017-2021. Within-country estimates use gwght. Primary pooled ratios use gwght x wght_eq1000 (equal-country-size scaling); sensitivity ratios use gwght x pwght (population-size scaling). Unweighted results describe the observed sample. Finite differences in national gwght totals mean the first pooled ratio is not an exactly equally normalized average of 36 country means."),
+        body("<b>Revised inferential question:</b> among private-household adults represented by the 30 training-country EVS surveys in 2017-2021, what are weighted high-satisfaction proportions and income/employment gaps? Define covered 36 countries; Develop narrows the inferential scope to honour training-data-only fitting. No estimate for all 36 countries is claimed here. National probability sampling and supplied calibration weights support cautious population inference, conditional on residual nonresponse assumptions. Within-country analysis weights are gwght / pi, where pi is the known training retention fraction within country x A170 strata (rounding makes it differ from 0.7). Pooled weights additionally multiply by wght_eq1000 or, in sensitivity, pwght. These size-scaled ratios are not exactly normalized averages of country means."),
         body("Pre-specify income contrast deciles 9-10 minus 1-2; employment contrast paid full/part-time work (X028=1/2) minus unemployment (X028=7). These are descriptive associations, not adjusted causal effects. Report counts, Kish effective sample size and approximate 95% intervals. Suppress estimates with raw or effective n below 30."),
         body("Use 1,000 respondent bootstrap draws separately within each fixed country, recalculating weighted ratios and contrasts. The common file has no definitive PSU/stratum identifiers. These intervals therefore approximate conditional sampling variability under iid respondents within country; they can be too narrow under unobserved cluster dependence and are not full survey-design intervals. Do not cluster a national estimate on its sole country."),
-        body("Income missingness is 14.70% and potentially MNAR. Compare observed-income and missing-income respondents, report country/group coverage, and avoid claiming that complete-case ratios or survey weights remove this bias. More respondents reduce variance but do not eliminate nonresponse, measurement or selection bias. Self-report, translations and modes can change the measured construct across countries."),
+        body("Income missingness is potentially MNAR: compare observed/missing-income groups, but do not claim to repair its bias. Population interpretation also assumes remaining target nonresponse is ignorable after weighting. Nonresponse and measurement errors bias estimates; ignored clusters principally invalidate uncertainty. <b>Verdict for a full design-based claim: Violated and likely harmful: repair or replace.</b> Obtain national PSU/stratum information; retain only explicitly approximate intervals meanwhile."),
         heading("7. Causality: identification before estimation"),
         body("The question remains: among adults 18-64 unemployed at baseline, what is the average effect on A170 at 12 months of entering paid employment within three months versus remaining unemployed? EVS observes current employment and current satisfaction once; neither transition timing nor baseline satisfaction is available."),
-        body("Prior well-being, health, job history, household circumstances and labour-market opportunities influence both employment and satisfaction. Reverse causation is plausible. Current income may mediate employment's effect and should not automatically be controlled when targeting a total effect. Cross-sectional regression or feature importance does not identify this intervention."),
-        body("<b>Proposed repair:</b> follow baseline-unemployed adults prospectively, measure pre-treatment common causes and well-being, record job entry and quality, and pre-specify a target trial. With defensible conditional exchangeability, overlap and consistency, use doubly robust outcome/propensity adjustment with cross-fitting and appropriate dependence-aware uncertainty. Check overlap, balance, attrition and spillovers. A randomized job-placement offer identifies the offer effect, not automatically employment's effect."),
-        body("<b>Verdict:</b> the causal effect is not identified from the supplied EVS cross-section. Part II will report descriptive employment associations with qualified uncertainty, but no fabricated treatment effect or causal standard error."),
+        body("Prior well-being, health, job history and labour-market opportunities influence both employment and satisfaction. Better prior health plausibly increases both, creating upward confounding of a positive employment association; the net direction is not identified. Current income may be a mediator; conditioning on it can remove part of the total effect. No cross-sectional feature importance identifies the intervention."),
+        body("<b>Proposed repair:</b> follow baseline-unemployed adults prospectively, measure pre-treatment common causes and well-being, record job entry and quality, and pre-specify a target trial. Separate <b>identification</b> (pre-treatment exchangeability, overlap, consistency/no spillovers) from <b>estimation</b> (a correct outcome or propensity nuisance model for doubly robust consistency; adequate cross-fitting/rates for influence-function uncertainty). Check balance, overlap and attrition; use design-aware standard errors. An employment-programme offer identifies the offer effect, not automatically employment's effect."),
+        body("<b>Verdict: Violated and likely harmful: repair or replace.</b> EVS cannot identify the employment intervention. The causal estimate and its standard error are therefore N/A, rather than zero or an employment-association coefficient."),
         heading("8. Reproduction and references"),
         body("The implementation will preserve source hashes, split manifests locally, seeds, versions, configurations, optimizer diagnostics and all report-generating aggregates. Final prediction-test scores will not appear in Develop. Part III will be an installable GitHub repository, with no web hosting or deployment."),
         body('EVS/WVS (2024), Joint EVS/WVS 2017-2022, ZA7505 v5.0.0, <link href="https://doi.org/10.4232/1.14320" color="#168C8C">doi:10.4232/1.14320</link>. Variable Report, June 2024: supports, missing codes, weighting and anonymisation. Rennie &amp; Srebro (2005), Loss Functions for Preference Levels. scikit-learn documentation: RandomForestClassifier and HistGradientBoostingClassifier. Source: <link href="https://github.com/sknefi/joint-life-satisfaction-analysis" color="#168C8C">github.com/sknefi/joint-life-satisfaction-analysis</link>.', True),
@@ -161,12 +162,14 @@ def part_one():
 def part_two():
     selection, splits, run = read("selection.json"), read("splits.json"), read("run.json")
     alt, sensitivity, inference = read("alternative_criterion.json"), read("sensitivity.json"), read("inference.json")
+    loss = read("loss_sensitivity.json")
     grouped, counts = read("country_cv.json"), splits["counts"]
     candidates = selection["candidates"]
     rows = []
+    baseline = read("baseline_parameters.json")
     for c in candidates:
         diag = read(c["model"] + "_parameters.json")
-        fitted = "Empirical frequencies" if c["model"] == "baseline" else (
+        fitted = f"median {baseline['median']}; P(7-10)={baseline['probability_high_7_10']:.3f}" if c["model"] == "baseline" else (
             f"{diag['expanded_features']} coefficients + 9 cutpoints" if c["model"] == "ordinal" else f"{diag['trees']} trees")
         if c["model"] == "baseline":
             objective, tuning, optimizer = "Empirical absolute loss / frequencies", "None", "Closed form"
@@ -179,6 +182,11 @@ def part_two():
             p = c["parameters"]
             objective, tuning, optimizer = "Multiclass log loss", f"lr {p['learning_rate']}; leaves {p['max_leaf_nodes']}; leaf {p['min_samples_leaf']}; L2 {p['l2_regularization']}", "Histogram boosting; early stop"
         rows.append([c["model"], objective, fitted, tuning, optimizer, f"{c['mae']:.3f} +/- {c['mae_se']:.3f}<br/>{c['log_loss']:.3f}<br/>{c['rps']:.4f}"])
+    estimate = next(r for r in inference["overall"] if r["value"] == "equal_country")
+    rows.extend([
+        ["inference", "Weighted ratio", f"p={estimate['estimate']:.3f}; SE={estimate['standard_error']:.4f}", "No tuning; 1,000 bootstrap draws", "Closed form; seed 42", "N/A"],
+        ["causality", "Not identified", "Effect N/A; SE N/A", "N/A: new design needed", "Not fitted", "N/A"],
+    ])
     pages = [[
         heading("1. Training results: validation inside training only"),
         body(f"EVS subset: 59,438 respondents / 36 countries; A170 has 59,122 valid responses. The fixed split yields {counts['train']:,} training, {counts['production_validation']:,} production-validation, {counts['same_country_test']:,} same-country final-test and {counts['country_test']:,} held-out-country final-test cases. The 316 missing targets are excluded from predictive learning. Counts differ slightly from nominal percentages due to per-stratum rounding."),
@@ -188,22 +196,24 @@ def part_two():
         heading("2. Criteria and representation"),
         body("Ordinal fitting minimizes all-threshold logistic surrogate loss plus L2; the baseline uses observed frequencies. Forests greedily improve Gini impurity; histogram boosting minimizes multinomial log loss. Final selection instead targets CV MAE; log loss and RPS check probability quality. No class balancing is applied, because it would change the learned prevalence. All predictive fitting is unweighted; survey-weighted inference answers a separate population question."),
         body("Age and age squared use fold-specific median imputation and scaling; a missing-age indicator is added. Nominal and ordinal survey items use explicit categories, including missingness. Country holdouts receive unknown-country indicator blocks during group CV; the public command rejects unsupported countries. The production artifact contains only 30 training-country contexts."),
-        heading("3. Alternative split criterion"),
-        table(["Fixed forest settings; changed criterion", "CV MAE", "Log loss", "RPS"], [
-            ["Gini", f"{alt['primary']['mae']:.4f}", f"{alt['primary']['log_loss']:.4f}", f"{alt['primary']['rps']:.5f}"],
-            ["Shannon entropy", f"{alt['alternative']['mae']:.4f}", f"{alt['alternative']['log_loss']:.4f}", f"{alt['alternative']['rps']:.5f}"],
-        ], [.43, .19, .19, .19]),
-        body(f"Changing only the criterion changes CV MAE by {alt['alternative']['mae'] - alt['primary']['mae']:+.4f}. This is a controlled comparison of greedy split objectives; it is not evidence that the forest finds a global likelihood optimum. Probability and point-score changes are both reported."),
+        heading("3. Alternative training criterion: squared versus Huber loss"),
+        table(["Same numeric linear specification", "CV MAE", "CV MSE"], [
+            ["OLS: half squared residual", f"{loss['squared']['mae']:.4f}", f"{loss['squared']['mse']:.4f}"],
+            ["Huber: delta fixed at 1 point", f"{loss['huber']['mae']:.4f}", f"{loss['huber']['mse']:.4f}"],
+        ], [.6, .2, .2]),
+        body(f"This audit supplement changes the global fitting loss, keeping the same unpenalized linear function class, training folds and support clipping (1-10). Squared loss targets a conditional mean; Huber limits tail influence and targets a robust centre. Numeric score distances are an explicit auxiliary assumption. Mean absolute OOF prediction change is {loss['mean_absolute_prediction_change']:.3f} points (95th percentile {loss['p95_absolute_prediction_change']:.3f}). No test/production data or model reselection is involved."),
     ], [
         heading("4. Search, chosen hyperparameters and sensitivity"),
-        table(["Candidate", "Selected hyperparameters"], [[c["model"], escape(json.dumps(c["parameters"], sort_keys=True))] for c in candidates], [.2, .8]),
-        body("Initial search and one-step boundary extensions follow Part I. Every candidate uses five folds and identical split indices; no preprocessing is shared across folds. Forest size is fixed at 200 trees. Boosting uses at most 200 iterations, a 15% internal training-fold validation fraction, patience 15, and seed 42. Complete trial spaces, fold results and timings are in results/trials.json."),
+        body("Search methods: grid for ordinal alpha {0.1,1,10,100}; grid for forest depth {6,10} x minimum leaf {20,50} x max_features {sqrt,0.7}, with 200 trees; eight seeded random boosting configurations from learning_rate {0.05,0.1}, leaves {7,15}, minimum leaf {50,100}, L2 {0,1}. One boundary extension tried ordinal 0.01, forest depth 14/leaf 10 and boosting leaves 23/leaf 25. Selected settings are in the training table. Five identical folds refit all preprocessing; full trial values/timings are saved."),
+        body("Boosting caps iterations at 200, uses 15% internal training-fold validation, patience 15, tol=1e-7 and seed 42. Additional audit diagnostics use three seeds and the same already-frozen configurations; they do not tune against production validation."),
         table(["Frozen selected-family specification", "CV MAE", "Log loss", "RPS"], [[s["specification"], f"{s['mae']:.3f}", f"{s['log_loss']:.3f}", f"{s['rps']:.4f}"] for s in sensitivity], [.43, .19, .19, .19]),
         body("Sensitivity fits reuse the selected family's hyperparameters without retuning; differences assess predictor availability, not separately optimized competitors. Adding happiness tests near-proxy dependence; removing subjective inputs tests whether survey-like subjective answers are essential."),
-        ("image", ROOT / "02_develop/figures/cv_curve.png", 480, 195, "Training-only CV curve"),
+        ("image", ROOT / "02_develop/figures/cv_curve.png", 480, 165, "Training-only CV curve"),
         heading("5. Optimization and fitted parameters"),
         body(optimizer_text()),
-        body("Forests use greedy CART and bootstrap aggregation; there is no continuous gradient convergence test. Boosting uses greedy histogram trees with early stopping, which is part of regularization rather than a certificate of global optimality. A second seed is reported for the chosen tree configurations as an optimizer/randomization stability check. Full settings, thresholds, coefficients, tree counts and diagnostics are saved as JSON; fitted estimators are serialized separately."),
+        body(parameter_text(), True),
+        body(seed_text(), True),
+        body("Software/functions: custom OrdinalLogit.objective with scipy.optimize.minimize; sklearn.ensemble.RandomForestClassifier / HistGradientBoostingClassifier; scipy.linalg.lstsq and minimize for the criterion supplement. Complete defaults/non-defaults and fitted parameter arrays are saved as JSON. Greedy trees have no interchangeable continuous solver or global convergence certificate.", True),
     ], [
         heading("6. Transfer diagnostics and uncertainty"),
         table(["Frozen candidate", "Grouped CV MAE", "Log loss", "RPS"], [[g["model"], f"{g['mae']:.3f}", f"{g['log_loss']:.3f}", f"{g['rps']:.4f}"] for g in grouped], [.3, .28, .21, .21]),
@@ -211,10 +221,10 @@ def part_two():
         heading("7. Population estimates and descriptive gaps"),
         table(["Overall weighting", "High-satisfaction proportion", "Approx. SE", "Approx. 95% interval"], [[r["value"], f"{100*r['estimate']:.2f}%", f"{100*r['standard_error']:.2f} pp", f"{100*r['ci_low']:.2f}-{100*r['ci_high']:.2f}%"] for r in inference["overall"]], [.26, .27, .2, .27]),
         table(["Descriptive contrast", "Difference", "Approx. SE", "Approx. 95% interval"], [[r["contrast"].replace("_", " "), f"{100*r['estimate']:+.2f} pp", f"{100*r['standard_error']:.2f} pp", f"{100*r['ci_low']:+.2f} to {100*r['ci_high']:+.2f} pp"] for r in inference["contrasts"]], [.36, .16, .18, .3]),
-        body("These pre-specified inferential descriptions use all 36 country samples separately from predictive model selection. Within-country gwght adjusts observed margins; pooled equal-country-size and population-size weighting target different summaries. Intervals use 1,000 iid respondent bootstraps within fixed countries. They omit unobserved PSU dependence, do not estimate uncertainty over a hypothetical population of countries, and do not remove selection or measurement bias. Small or low-effective-size groups are suppressed."),
+        body("Revised from Define: these estimates fit only the 34,740 training respondents in 30 countries. Analysis weights are gwght / pi, correcting the country x outcome partition retention (pi=0.5-0.7); pooled size factors define different summaries. Bootstrap intervals use 1,000 iid respondent resamples within fixed countries and fixed weights. They are approximate: national PSU dependence, target/income nonresponse and measurement bias remain. No inference to the six held-out countries is made. Groups with raw or effective n below 30 are suppressed."),
         body(income_text()),
         heading("8. Causality, reproducibility and remaining evaluation"),
-        body("The paid-employment gap above is an association. The effect of obtaining employment remains unidentified: no pre-employment well-being, transition assignment or 12-month outcome is observed. No causal coefficient or causal standard error is reported. The prospective design and assumptions in Part I remain required."),
+        body("<b>Causal estimate: N/A; causal standard error: N/A.</b> EVS has no baseline employment transition or 12-month outcome and cannot identify the intervention. The paid-work gap above is an association with a descriptive standard error, not a substitute causal estimate. A new longitudinal/experimental design is required; no estimator can repair absent identification."),
         body(f"Environment: Python {run['versions']['python']}; scikit-learn {run['versions']['scikit-learn']}; NumPy {run['versions']['numpy']}; SciPy {run['versions']['scipy']}. Seed 42. Input Parquet SHA-256: {run['source_sha256'][:20]}... Full source/code hashes, package versions, split policy and optimizer settings are recorded. Source: EVS/WVS ZA7505 v5.0.0, doi:10.4232/1.14320. Reproduce with make train, make inference and make develop-reports.", True),
     ]]
     render(2, "Training and Tuning | Objectives, validation and uncertainty", pages)
@@ -228,13 +238,37 @@ def optimizer_text():
     if stability_path.exists():
         s = read("seed_stability.json")
         extra = " Alternate-seed details are recorded in seed_stability.json."
-    return (f"<b>Ordinal:</b> L-BFGS-B with analytic gradients, ordered-threshold increment constraints, maximum 2,000 initial iterations, initial ftol=1e-9; retry at stricter tolerance when necessary. Final fit: {o['iterations']} iterations; success={o['success']}; objective {o['objective']:.2f}; projected gradient per training row {o['projected_gradient_per_row']:.2g}. "
+    return (f"<b>Ordinal:</b> L-BFGS-B with analytic gradients, ordered-threshold increment constraints, initial slopes zero and cutpoints empirical cumulative logits; 2,000 initial iterations, ftol=1e-9, gtol=1e-5; retry at stricter tolerance when necessary. Final fit: {o['iterations']} iterations; success={o['success']}; objective {o['objective']:.2f}; projected gradient per training row {o['projected_gradient_per_row']:.2g}. "
             f"<b>Boosting:</b> final fit {b['iterations']} iterations / {b['trees']} trees; internal validation log loss {b['validation_loss_initial']:.4f} to {b['validation_loss_final']:.4f}." + extra)
+
+
+
+def parameter_text():
+    o = read("ordinal_parameters.json")
+    top = sorted(o["coefficients"].items(), key=lambda kv: abs(kv[1]), reverse=True)[:3]
+    coefficients = "; ".join(f"{k}={v:+.3f}" for k,v in top)
+    thresholds = ", ".join(f"{x:.2f}" for x in o["thresholds"])
+    h = read("loss_sensitivity.json")["full_training_parameters"]
+    return (f"<b>Fitted ordinal parameters:</b> largest absolute coefficients {coefficients}; nine cutpoints [{thresholds}]. "
+            f"<b>Huber:</b> rank {h['rank']}, start=OLS, L-BFGS-B, delta=1, maxiter=3000, ftol=1e-12, gtol=1e-7; "
+            f"{h['huber_iterations']} iterations, objective {h['huber_objective']:.4f}, max gradient {h['huber_gradient_max']:.2g}; success={h['huber_success']}. "
+            "OLS is a closed-form rank-revealing least-squares solve. Both objectives are convex; multiple local starts are unnecessary.")
+
+
+def seed_text():
+    rows = read("seed_stability_extended.json")
+    parts = []
+    for model in ("forest", "boosting"):
+        subset = [r for r in rows if r['model'] == model]
+        values = [r['cv_mae'] for r in subset]
+        criteria = [r['training_log_loss'] for r in subset]
+        parts.append(f"{model}: CV MAE {min(values):.4f}-{max(values):.4f}; full-training log loss best {min(criteria):.4f}, range {max(criteria)-min(criteria):.4f}")
+    return "<b>Seeds 42/2026/2027:</b> " + "; ".join(parts) + ". These are stability checks of greedy randomized procedures, not a global optimum claim; no new model was selected."
 
 
 def income_text():
     s = read("income_sensitivity.json")
-    return (f"Income is missing in 14.70% of EVS rows. Equal-country-size-weighted high-satisfaction proportions are {100*s['income_observed']['estimate']:.2f}% with observed income and {100*s['income_missing']['estimate']:.2f}% with missing income. This diagnoses a potentially selected complete-case population; it does not identify an MNAR correction.")
+    return (f"Income is missing in 14.70% of the original EVS subset. For the revised training-country inference, size-weighted high-satisfaction proportions are {100*s['income_observed']['estimate']:.2f}% with observed income and {100*s['income_missing']['estimate']:.2f}% with missing income. This diagnoses a potentially selected complete-case population; it does not identify an MNAR correction.")
 
 
 def part_three():
@@ -243,19 +277,19 @@ def part_three():
     qa = read("production_checks.json")
     pages = [[
         heading("1. Product and intended user"),
-        body(f"An installable, versioned Python repository for students/researchers reproducing EVS life-satisfaction analysis or predicting an omitted A170 response for an EVS-style respondent. Version 0.1.0 includes the frozen {selected['selected']} model and its complete preprocessing. There is no hosted service or deployment. Repository: <link href='https://github.com/sknefi/joint-life-satisfaction-analysis' color='#168C8C'>github.com/sknefi/joint-life-satisfaction-analysis</link>."),
+        body(f"An installable, versioned Python repository for students/researchers reproducing EVS life-satisfaction analysis or predicting an omitted A170 response for an EVS-style respondent. Package release 0.1.1 includes the unchanged v0.1.0 Part II {selected['selected']} model and its complete preprocessing. There is no hosted service or deployment. Repository: <link href='https://github.com/sknefi/joint-life-satisfaction-analysis' color='#168C8C'>github.com/sknefi/joint-life-satisfaction-analysis</link>."),
         heading("2. Install and run"),
-        ("code", "python3.12 -m venv .venv\nsource .venv/bin/activate\npython -m pip install -r requirements-lock.txt\npython -m pip install --no-deps .\nevs-predict --input examples/respondents.csv --output predictions.csv\npython -m unittest discover -s tests -p 'test_*.py'"),
-        body("The model artifact lives in models/; default paths assume the repository root. Elsewhere pass --model /path/to/evs_v0_1_0.joblib. The notebook notebooks/quickstart.ipynb demonstrates synthetic profiles without requiring the respondent dataset. Source data access instructions and immutable-source rules are in data/README.md; make data, train, inference and develop-reports reproduce the analysis locally."),
+        ("code", "python3.12 -m venv .venv\nsource .venv/bin/activate\npython -m pip install -r requirements-model-lock.txt\npython -m pip install --no-deps .\nevs-predict --input examples/respondents.csv --output predictions.csv\npython -m unittest discover -s tests -p 'test_*.py'"),
+        body("Download/unzip the submission kit or clone the repository first; run commands from its root. The kit also contains a pip-installable wheel and synthetic saved reference cases. The model artifact lives in models/; default paths assume the repository root. Elsewhere pass --model /path/to/evs_v0_1_0.joblib. The notebook notebooks/quickstart.ipynb demonstrates synthetic profiles without requiring the respondent dataset. Source data access instructions and immutable-source rules are in data/README.md; make data, train, inference and develop-reports reproduce the analysis locally."),
         heading("3. Inputs, outputs and scope"),
         body("Input CSV columns: X001, X003, X025R, X028, X047E_EVS5, A009, A165, A173, cntry_AN. Use official survey category codes; blank values and -1..-5 become missing. Age must be 18-82, with 82 interpreted as 82+. Country is mandatory and must be one of the 30 training countries. Output: predicted_score (distribution median), probability_high_7_10 and p_1 through p_10. The predictor rejects A170, identifiers, weights, unexpected columns and invalid categories; writes are atomic."),
         heading("4. Verification as a reusable product"),
         table(["Check", "Observed result"], [
             ["Package and regression tests", f"{qa['unit_tests']} tests passed; existing profiler checks retained. Clean installed-wheel check: {qa['clean_environment_installation']}; executed notebook: {qa['notebook_executed']}."],
-            ["Artifact parity", f"{qa['synthetic_cases']} synthetic cases; maximum probability difference after save/load and CLI round-trip: {qa['max_probability_difference']:.2g}. Class order and probability sums checked."],
+            ["Artifact parity", f"{qa['synthetic_cases']} synthetic cases; maximum probability difference after save/load and CLI round-trip: {qa['max_probability_difference']:.2g}. Saved Part II reference predictions, class order and probability sums checked; no private training checkpoint is required."],
             ["Bad inputs and leakage", "Tests cover missing codes, malformed/range/category errors, unknown countries, target exclusion, fold-local preprocessing and country isolation."],
             ["Independent production validation", f"Frozen model: n={prod['n']:,}, MAE={prod['scores']['mae']:.3f}, log loss={prod['scores']['log_loss']:.3f}, RPS={prod['scores']['rps']:.4f}. Not used to tune or select the model."],
-            ["Automation and reproducibility", "GitHub Actions installs the package and runs synthetic-data tests; recorded versions, seeds, hashes and saved preprocessing. Actual hosted CI status is documented separately."],
+            ["Automation and reproducibility", "GitHub Actions installs the package and runs synthetic-data tests; recorded versions, seeds, hashes and saved preprocessing. Remote CI status is unverified (authenticated access was not available); workflow presence is not a claim of a passed server run."],
         ], [.29, .71]),
         heading("5. Honest interpretation and maintenance"),
         body("The probabilities are model estimates for historical EVS-style contexts, not validated individual confidence intervals or causal effects. No interval coverage is claimed. Production reliability bins are saved; final same-country and six-country prediction tests remain for Assure. New countries, survey instruments or later periods need external validation. Monitor input/missingness drift and error by country when new labelled data arrive; retrain and version only after that evaluation."),

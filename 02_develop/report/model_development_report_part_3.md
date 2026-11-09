@@ -4,7 +4,7 @@
 
 ## 1. Product and intended user
 
-An installable, versioned Python repository for students/researchers reproducing EVS life-satisfaction analysis or predicting an omitted A170 response for an EVS-style respondent. Version 0.1.0 includes the frozen boosting model and its complete preprocessing. There is no hosted service or deployment. Repository: <link href='https://github.com/sknefi/joint-life-satisfaction-analysis' color='#168C8C'>github.com/sknefi/joint-life-satisfaction-analysis</link>.
+An installable, versioned Python repository for students/researchers reproducing EVS life-satisfaction analysis or predicting an omitted A170 response for an EVS-style respondent. Package release 0.1.1 includes the unchanged v0.1.0 Part II boosting model and its complete preprocessing. There is no hosted service or deployment. Repository: <link href='https://github.com/sknefi/joint-life-satisfaction-analysis' color='#168C8C'>github.com/sknefi/joint-life-satisfaction-analysis</link>.
 
 
 ## 2. Install and run
@@ -12,13 +12,13 @@ An installable, versioned Python repository for students/researchers reproducing
 ```text
 python3.12 -m venv .venv
 source .venv/bin/activate
-python -m pip install -r requirements-lock.txt
+python -m pip install -r requirements-model-lock.txt
 python -m pip install --no-deps .
 evs-predict --input examples/respondents.csv --output predictions.csv
 python -m unittest discover -s tests -p 'test_*.py'
 ```
 
-The model artifact lives in models/; default paths assume the repository root. Elsewhere pass --model /path/to/evs_v0_1_0.joblib. The notebook notebooks/quickstart.ipynb demonstrates synthetic profiles without requiring the respondent dataset. Source data access instructions and immutable-source rules are in data/README.md; make data, train, inference and develop-reports reproduce the analysis locally.
+Download/unzip the submission kit or clone the repository first; run commands from its root. The kit also contains a pip-installable wheel and synthetic saved reference cases. The model artifact lives in models/; default paths assume the repository root. Elsewhere pass --model /path/to/evs_v0_1_0.joblib. The notebook notebooks/quickstart.ipynb demonstrates synthetic profiles without requiring the respondent dataset. Source data access instructions and immutable-source rules are in data/README.md; make data, train, inference and develop-reports reproduce the analysis locally.
 
 
 ## 3. Inputs, outputs and scope
@@ -32,15 +32,15 @@ Input CSV columns: X001, X003, X025R, X028, X047E_EVS5, A009, A165, A173, cntry_
 
 |---|---|
 
-| Package and regression tests | 17 tests passed; existing profiler checks retained. Clean installed-wheel check: True; executed notebook: True. |
+| Package and regression tests | 21 tests passed; existing profiler checks retained. Clean installed-wheel check: True; executed notebook: True. |
 
-| Artifact parity | 120 synthetic cases; maximum probability difference after save/load and CLI round-trip: 0. Class order and probability sums checked. |
+| Artifact parity | 120 synthetic cases; maximum probability difference after save/load and CLI round-trip: 0. Saved Part II reference predictions, class order and probability sums checked; no private training checkpoint is required. |
 
 | Bad inputs and leakage | Tests cover missing codes, malformed/range/category errors, unknown countries, target exclusion, fold-local preprocessing and country isolation. |
 
 | Independent production validation | Frozen model: n=5,007, MAE=1.213, log loss=1.711, RPS=0.0963. Not used to tune or select the model. |
 
-| Automation and reproducibility | GitHub Actions installs the package and runs synthetic-data tests; recorded versions, seeds, hashes and saved preprocessing. Actual hosted CI status is documented separately. |
+| Automation and reproducibility | GitHub Actions installs the package and runs synthetic-data tests; recorded versions, seeds, hashes and saved preprocessing. Remote CI status is unverified (authenticated access was not available); workflow presence is not a claim of a passed server run. |
 
 
 ## 5. Honest interpretation and maintenance

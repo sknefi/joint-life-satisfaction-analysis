@@ -26,9 +26,10 @@ X001, X003, X025R, X028, X047E_EVS5, A009, A165, A173 and cntry_AN; Y is A170.
 The local respondent split manifest and out-of-fold probability checkpoints live
 in ignored `02_develop/local/`, never in Git or the distributable package.
 
-Aggregate descriptive inference uses all 36 country samples in a separate,
-pre-specified pipeline. It does not evaluate prediction models on final test
-cases. Predictive training uses 30 countries, with six held out for Assure.
+The audited inferential analysis fits weighted proportions on the training
+partition in 30 countries only. Its analysis weights correct the known
+country x outcome training retention probabilities. The question is narrowed
+from Define's 36-country scope and the reports explicitly state this revision. Predictive training uses 30 countries, with six held out for Assure.
 
 Synthetic example files contain invented profiles only. Neither installed
 package tests nor the quickstart needs access to the survey CSV.

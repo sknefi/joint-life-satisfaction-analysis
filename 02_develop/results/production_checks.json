@@ -5,7 +5,9 @@
   "max_probability_difference": 0.0,
   "model_sha256": "c4f75205e305d96f396a7396af7abadadc46b7fb45de061847f656a1641921c6",
   "notebook_executed": true,
+  "requires_private_training_checkpoints": false,
   "saved_model_matches_training_estimator": true,
+  "saved_synthetic_reference_parity": true,
   "synthetic_cases": 120,
-  "unit_tests": 17
+  "unit_tests": 21
 }

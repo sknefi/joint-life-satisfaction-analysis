@@ -60,6 +60,8 @@ Later periods, new countries and different questionnaires require validation.
 
 ## Develop results and reproduction
 
+Package release **v0.1.1** strengthens the subject audit while retaining the unchanged v0.1.0 Part II model.
+
 The frozen choice is histogram gradient boosting, trained on **34,740** cases.
 Five-fold **training-only** CV MAEs are baseline **1.565**, ordinal **1.255**,
 random forest **1.250**, and boosting **1.225**. The 5,007-case production
@@ -71,8 +73,13 @@ Primary predictors exclude happiness. Adding that near-proxy gives CV MAE
 1.102; using only demographic/economic inputs gives 1.447 with the frozen
 selected-family configuration. This sensitivity is not separately retuned.
 
-Weighted high-satisfaction proportions are 72.51% unweighted, 70.99% with
-equal-country-size scaling, and 68.60% with population-size scaling. The
+The audited Part II inferential question is narrowed from 36 to **30 training
+countries**, so all fitted approaches use training data only. Only the 34,740
+training cases enter the weighted ratios. We correct their known country x
+outcome split-selection probabilities (0.5-0.7 due to rounding) using `gwght/pi`.
+Training-sample high-satisfaction proportions are 72.57% unweighted,
+71.18% with equal-country-size scaling, and
+67.14% with population-size scaling. The
 high-minus-low income and paid-work-minus-unemployed gaps are **associations**.
 Intervals use an approximate within-country respondent bootstrap, not a full
 complex-survey design. See the reports and model card for limitations.
@@ -86,6 +93,7 @@ python -m pip install --no-deps -e .
 make data
 make train
 make inference
+make audit-supplements
 make verify-production
 make develop-reports
 make package
@@ -104,9 +112,9 @@ Training caps numerical threads and uses four independent fold workers.
 Training checkpoints are keyed by source, code, versions and configuration.
 An unchanged rerun reuses fold results. If code/source identity changes, move
 the existing `02_develop/local/` aside before starting a fresh run; the command
-refuses to silently mix incompatible checkpoints. Inferential descriptions use
-all 36 countries as a separate pre-specified pipeline, never as a final model
-comparison. The primary prediction target is an unweighted EVS-style respondent;
+refuses to silently mix incompatible checkpoints. The audited inferential analysis
+uses the training partition only and makes no population claim for the six
+held-out countries. Older v0.1.0 full-sample descriptions are superseded in Develop. The primary prediction target is an unweighted EVS-style respondent;
 survey weights are used in the separate population-inference analysis.
 
 The custom ordinal estimator implements the all-threshold logistic objective
@@ -118,7 +126,7 @@ nested estimate after hyperparameter selection.
 
 GitHub Actions runs the installed package tests on synthetic fixtures and the
 released example; it does not download the survey or retrain on private data.
-Tag `v0.1.0` identifies the first reusable Develop version. The code is installable
+Tag `v0.1.0` identifies the original frozen model; `v0.1.1` is the audited package/report revision. The code is installable
 with pip from the repository; it is not published to PyPI.
 
 ## Data and documentation
@@ -282,3 +290,33 @@ The generated profile covers the information needed for the assignment, includin
 - assignment constraints and a shortlist of potentially useful figures.
 
 The generated text is a reproducible starting point for the report. Claims about survey design, variable meanings, and coding should still cite the official codebook.
+
+## Audited hand-in and release kit
+
+`02_develop/SUBJECT_COMPLIANCE.md` maps each requirement to concrete evidence and
+records the remaining external checks. `make submission` builds a ZIP with the
+three PDFs, code, synthetic saved reference cases, model, executed notebook,
+checksums and pip-installable wheel. It excludes survey records, local split IDs,
+Git history and environments. Give this ZIP to the teacher alongside the PDFs
+if the private repository is not accessible; no GitHub login is required to use
+the extracted kit. Run commands from the extracted repository root.
+
+The squared-versus-Huber comparison is an explicitly labelled audit supplement
+on the same numeric linear function class and the original training folds. It
+changes the actual optimization loss, not just the scoring metric. Huber delta=1
+is fixed for robustness; this supplement and three-seed checks do not reselect
+the production model or reopen its validation for tuning.
+
+`evs-predict` and `scripts/verify_production.py` now compare the released artifact
+with 120 saved synthetic reference predictions and run without raw data or local
+training checkpoints. The reference files originated from the unchanged Part II
+model. The product does not claim individual interval coverage.
+
+The causal intervention remains unidentified. Its estimate and standard error
+are explicitly N/A; descriptive employment gaps are not causal substitutes.
+
+GitHub Actions workflow is supplied and the same checks pass locally. Its remote
+run result has not been authenticated/verified in this session. A Git tag is
+provided; the standalone release kit supplies the installable artifact without
+requiring a separately created GitHub Releases page. Moodle submission/deadline
+and the teacher's access must be confirmed by the student.

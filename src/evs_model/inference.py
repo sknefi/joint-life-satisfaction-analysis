@@ -7,7 +7,8 @@ import pandas as pd
 
 from .config import SEED
 from .data import load_source
-from .training import write_json
+from .training import file_hash, versions, write_json
+from .audit_analysis import training_inference_frame
 
 
 def weighted_summary(y, weights):
@@ -22,11 +23,9 @@ def weighted_summary(y, weights):
 
 def run_inference(source, root, repetitions=1000):
     raw = load_source(source)
-    # Inferential descriptions are a separate, pre-specified use of all 36
-    # countries, never a model comparison or prediction test evaluation.
-    frame = raw.loc[raw.A170.between(1, 10)].reset_index(drop=True)
+    frame, held = training_inference_frame(raw)
     y = frame.A170.ge(7).to_numpy(dtype=float)
-    gw = frame.gwght.to_numpy(dtype=float)
+    gw = frame.analysis_weight.to_numpy(dtype=float)
     eq = gw * frame.wght_eq1000.to_numpy(dtype=float)
     pop = gw * frame.pwght.to_numpy(dtype=float)
     groups = []
@@ -87,12 +86,17 @@ def run_inference(source, root, repetitions=1000):
     result_path.mkdir(parents=True, exist_ok=True)
     pd.DataFrame(rows).to_csv(result_path / "weighted_proportions.csv", index=False)
     write_json(result_path / "inference.json", {"bootstrap_repetitions": repetitions, "seed": SEED,
+               "source_parquet_sha256": file_hash(source), "versions": versions(),
                "interval_method": "percentile iid respondent bootstrap within fixed countries; approximate, not full survey-design intervals",
                "limitations": "No definitive PSU/stratum identifiers; within-country cluster dependence, nonresponse and measurement bias are not repaired.",
                "contrasts": contrasts, "overall": [r for r in rows if r["kind"] == "overall"],
                "missing_income_fraction": float(raw.X047E_EVS5.lt(0).mean()),
-               "analysis_n": len(frame), "population_scope": "36 EVS country populations, private-household adults, 2017-2021"})
-    distribution = frame.groupby("A170", observed=True).apply(lambda d: pd.Series({"n": len(d), "equal_country_weight": (d.gwght * d.wght_eq1000).sum()}), include_groups=False)
+               "analysis_n": len(frame), "analysis_partition": "train only", "excluded_countries": held,
+               "split_probability_min": float(frame.split_probability.min()),
+               "split_probability_max": float(frame.split_probability.max()),
+               "weight_rule": "gwght / P(train | country, A170); multiply by country-size factor for pooling",
+               "population_scope": "30 training-country EVS populations, private-household adults, 2017-2021; conditional on target-response assumptions"})
+    distribution = frame.groupby("A170", observed=True).apply(lambda d: pd.Series({"n": len(d), "equal_country_weight": (d.analysis_weight * d.wght_eq1000).sum()}), include_groups=False)
     distribution["unweighted_proportion"] = distribution.n / distribution.n.sum()
     distribution["equal_country_proportion"] = distribution.equal_country_weight / distribution.equal_country_weight.sum()
     distribution.to_csv(result_path / "target_distribution.csv")
@@ -101,5 +105,6 @@ def run_inference(source, root, repetitions=1000):
     write_json(result_path / "income_sensitivity.json", {
         "income_observed": weighted_summary(y[complete], eq[complete]),
         "income_missing": weighted_summary(y[~complete], eq[~complete]),
+        "training_missing_income_fraction": float(frame.X047E_EVS5.lt(0).mean()),
         "interpretation": "A difference flags selection risk; neither imputation nor weighting identifies an MNAR correction."})
     print(f"Inference: {len(frame):,} valid outcomes, {repetitions} stratified respondent bootstrap draws.", flush=True)

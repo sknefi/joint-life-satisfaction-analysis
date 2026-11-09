@@ -4,6 +4,7 @@
 .cache/
 tmp/
 dist/
+submission/
 build/
 *.egg-info/
 .ipynb_checkpoints/

@@ -1,3 +1,17 @@
 {
-  "criterion": "empirical frequency; median minimizes empirical absolute error"
+  "criterion": "empirical frequency; median minimizes empirical absolute error",
+  "median": 8,
+  "probabilities": [
+    0.019142199194012666,
+    0.011859527921704088,
+    0.0254461715601612,
+    0.033246977547495685,
+    0.09231433506044905,
+    0.09225676453655728,
+    0.1678468624064479,
+    0.24530800230282096,
+    0.1542314335060449,
+    0.15834772596430627
+  ],
+  "probability_high_7_10": 0.72573402417962
 }

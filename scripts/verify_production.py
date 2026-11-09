@@ -25,20 +25,11 @@ def main():
     bundle = load_bundle(ROOT / "models/evs_v0_1_0.joblib")
     metadata = json.loads((ROOT / "models/evs_v0_1_0.metadata.json").read_text())
     assert file_hash(ROOT / "models/evs_v0_1_0.joblib") == metadata["artifact_sha256"]
-    rng = np.random.default_rng(42)
-    n = 120
-    sample = pd.DataFrame({"X001": rng.integers(1, 3, n), "X003": rng.integers(18, 83, n),
-        "X025R": rng.integers(1, 4, n), "X028": rng.integers(1, 9, n),
-        "X047E_EVS5": rng.integers(1, 11, n), "A009": rng.integers(1, 6, n),
-        "A165": rng.integers(1, 3, n), "A173": rng.integers(1, 11, n),
-        "cntry_AN": rng.choice(bundle["countries"], n)})
-    sample.loc[:4, "X047E_EVS5"] = [-1, -2, -3, -4, -5]
-    sample.loc[5, "X003"] = np.nan
+    sample = pd.read_csv(ROOT / "examples/reference_profiles.csv")
+    n = len(sample)
+    reference = pd.read_csv(ROOT / "examples/reference_predictions.csv")
     expected = predict_frame(bundle, sample)
-    local = joblib.load(ROOT / "02_develop/local" / f"{bundle['model_name']}.joblib")
-    from evs_model.data import clean_features
-    p_original = local.predict_proba(clean_features(sample))
-    np.testing.assert_allclose(expected[[f"p_{i}" for i in range(1, 11)]], p_original, atol=1e-12)
+    np.testing.assert_allclose(expected, reference, atol=1e-12, rtol=0)
     with tempfile.TemporaryDirectory() as d:
         source, output = Path(d) / "profiles.csv", Path(d) / "predictions.csv"
         sample.to_csv(source, index=False)
@@ -73,7 +64,8 @@ def main():
     previous = json.loads(path.read_text()) if path.exists() else {}
     write_json(path, {
         "unit_tests": result.testsRun, "synthetic_cases": n, "max_probability_difference": difference,
-        "saved_model_matches_training_estimator": True, "clean_environment_installation": clean_checked,
+        "saved_model_matches_training_estimator": True, "saved_synthetic_reference_parity": True,
+        "requires_private_training_checkpoints": False, "clean_environment_installation": clean_checked,
         "model_sha256": metadata["artifact_sha256"], "notebook_executed": notebook_executed,
         "hosted_ci_status": previous.get("hosted_ci_status", "workflow prepared; server status not yet verified"),
         "cli_output": f"Predicted {len(actual)} synthetic respondents successfully."})

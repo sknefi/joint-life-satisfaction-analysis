@@ -27,3 +27,5 @@ jobs:
         run: python -m unittest discover -s tests -p 'test_*.py'
       - name: Check the released model on synthetic inputs
         run: evs-predict --input examples/respondents.csv --output /tmp/evs-predictions.csv
+      - name: Verify saved Part II predictions without private training data
+        run: python scripts/verify_production.py

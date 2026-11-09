@@ -1,62 +1,84 @@
 {
-  "analysis_n": 59122,
+  "analysis_n": 34740,
+  "analysis_partition": "train only",
   "bootstrap_repetitions": 1000,
   "contrasts": [
     {
       "causal": false,
-      "ci_high": 0.3330603280489034,
-      "ci_low": 0.300637783744045,
+      "ci_high": 0.36132173025826836,
+      "ci_low": 0.3218109493551613,
       "contrast": "income_high_minus_low",
-      "estimate": 0.31736547401540327,
-      "standard_error": 0.008154718332084773
+      "estimate": 0.34239573320850347,
+      "standard_error": 0.00989458468979379
     },
     {
       "causal": false,
-      "ci_high": 0.20944755567568954,
-      "ci_low": 0.17017629695255646,
+      "ci_high": 0.21219829930707634,
+      "ci_low": 0.16222403378023914,
       "contrast": "paid_minus_unemployed",
-      "estimate": 0.18991982905016302,
-      "standard_error": 0.009692827292998217
+      "estimate": 0.18667629696332155,
+      "standard_error": 0.012510293905958777
     }
+  ],
+  "excluded_countries": [
+    "AT",
+    "FR",
+    "GB",
+    "LT",
+    "MK",
+    "RS"
   ],
   "interval_method": "percentile iid respondent bootstrap within fixed countries; approximate, not full survey-design intervals",
   "limitations": "No definitive PSU/stratum identifiers; within-country cluster dependence, nonresponse and measurement bias are not repaired.",
   "missing_income_fraction": 0.1470439785995491,
   "overall": [
     {
-      "ci_high": 0.7285629714826968,
-      "ci_low": 0.7217106153377761,
-      "effective_n": 59122.0,
-      "estimate": 0.7251107878623863,
+      "ci_high": 0.7301381692573402,
+      "ci_low": 0.721558002302821,
+      "effective_n": 34740.0,
+      "estimate": 0.7257340241796201,
       "kind": "overall",
-      "n": 59122,
-      "standard_error": 0.0017764293005155247,
+      "n": 34740,
+      "standard_error": 0.0022156626144495613,
       "suppressed": false,
       "value": "unweighted"
     },
     {
-      "ci_high": 0.7149134063132775,
-      "ci_low": 0.7055215710617302,
-      "effective_n": 38050.97847698444,
-      "estimate": 0.7098748035979809,
+      "ci_high": 0.7177208769742642,
+      "ci_low": 0.7060407178325707,
+      "effective_n": 22271.986687342353,
+      "estimate": 0.7117644573478855,
       "kind": "overall",
-      "n": 59122,
-      "standard_error": 0.0023820337646336576,
+      "n": 34740,
+      "standard_error": 0.0029862171227621878,
       "suppressed": false,
       "value": "equal_country"
     },
     {
-      "ci_high": 0.6957968422362323,
-      "ci_low": 0.6772964016588385,
-      "effective_n": 11072.632592440914,
-      "estimate": 0.686048052268062,
+      "ci_high": 0.6842360668192254,
+      "ci_low": 0.6593625932668256,
+      "effective_n": 5663.232419842534,
+      "estimate": 0.6714149353585919,
       "kind": "overall",
-      "n": 59122,
-      "standard_error": 0.004688206874937859,
+      "n": 34740,
+      "standard_error": 0.006399284195367233,
       "suppressed": false,
       "value": "population"
     }
   ],
-  "population_scope": "36 EVS country populations, private-household adults, 2017-2021",
-  "seed": 42
+  "population_scope": "30 training-country EVS populations, private-household adults, 2017-2021; conditional on target-response assumptions",
+  "seed": 42,
+  "source_parquet_sha256": "978592d03407591d74b1fd8539a881c35c497eaff9045be25cc2a2ff00e99b84",
+  "split_probability_max": 0.7,
+  "split_probability_min": 0.5,
+  "versions": {
+    "joblib": "1.6.0",
+    "numpy": "2.5.4",
+    "pandas": "3.1.1",
+    "pyarrow": "25.0.1",
+    "python": "3.12.14",
+    "scikit-learn": "1.9.1",
+    "scipy": "1.18.1"
+  },
+  "weight_rule": "gwght / P(train | country, A170); multiply by country-size factor for pooling"
 }

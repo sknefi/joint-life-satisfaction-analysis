@@ -17,6 +17,7 @@ from sklearn.model_selection import GroupKFold, ParameterGrid, ParameterSampler
 from threadpoolctl import threadpool_limits
 
 from .config import CORE, DEMOGRAPHIC, SCHEMA_VERSION, SEED, TARGET, WITH_HAPPINESS
+from . import __version__
 from .data import clean_features, load_source, split_respondents, within_country_folds
 from .metrics import reliability, scores
 from .models import make_model, median_predictions
@@ -45,7 +46,10 @@ def versions():
 
 def diagnostics(model):
     if not hasattr(model, "named_steps"):
-        return {"criterion": "empirical frequency; median minimizes empirical absolute error"}
+        return {"criterion": "empirical frequency; median minimizes empirical absolute error",
+                "median": int(median_predictions(model.probabilities_[None, :])[0]),
+                "probabilities": model.probabilities_.tolist(),
+                "probability_high_7_10": float(model.probabilities_[6:].sum())}
     estimator = model.named_steps["model"]
     encoding = model.named_steps["encode"]
     if hasattr(estimator, "optimization_"):
@@ -203,7 +207,7 @@ def run_training(source, root, jobs=4):
         joblib.dump(model, private / f"{name}.joblib", compress=3)
         write_json(results / f"{name}_parameters.json", diagnostics(model))
     selected_model = joblib.load(private / f"{winner}.joblib")
-    bundle = {"schema_version": SCHEMA_VERSION, "package_version": "0.1.0", "model_name": winner,
+    bundle = {"schema_version": SCHEMA_VERSION, "package_version": __version__, "model_name": winner,
               "features": list(CORE), "countries": sorted(training.cntry_AN.unique().tolist()),
               "classes": list(range(1, 11)), "estimator": selected_model,
               "versions": versions(), "source_sha256": source_hash, "training_rows": len(training)}

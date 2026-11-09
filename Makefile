@@ -8,7 +8,7 @@ REQUIREMENTS_STAMP := $(dir $(PYTHON)).project-installed
 
 .DEFAULT_GOAL := profile
 
-.PHONY: profile profile-all report data setup test check help train inference develop-reports predict-example verify-production package
+.PHONY: profile profile-all report data setup test check help train inference audit-supplements develop-reports predict-example verify-production package submission
 
 profile: $(PYTHON)
 	@$(PYTHON) $(PROFILE_SCRIPT) --study EVS
@@ -49,6 +49,8 @@ help:
 	@echo "  make predict-example  Predict synthetic example profiles"
 	@echo "  make verify-production  Saved-model and installed-command checks"
 	@echo "  make package  Build wheel and source distribution"
+	@echo "  make audit-supplements  Training-only loss and three-seed diagnostics"
+	@echo "  make submission  Assemble a data-free submission ZIP"
 
 $(PYTHON):
 	$(PYTHON_BASE) -m venv $(patsubst %/bin/python,%,$(PYTHON))
@@ -64,6 +66,9 @@ train: $(REQUIREMENTS_STAMP)
 inference: $(REQUIREMENTS_STAMP)
 	@OPENBLAS_NUM_THREADS=1 $(PYTHON) -c 'from evs_model.cli import infer_main; infer_main()'
 
+audit-supplements: $(REQUIREMENTS_STAMP)
+	@OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 $(PYTHON) scripts/run_audit_supplements.py
+
 develop-reports: $(REQUIREMENTS_STAMP)
 	@MPLCONFIGDIR=.cache/matplotlib $(PYTHON) scripts/build_develop_reports.py
 
@@ -75,3 +80,6 @@ verify-production: $(REQUIREMENTS_STAMP)
 
 package: $(REQUIREMENTS_STAMP)
 	@$(PYTHON) -m build --no-isolation
+
+submission: package
+	@$(PYTHON) scripts/build_submission.py

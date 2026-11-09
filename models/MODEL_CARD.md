@@ -72,8 +72,12 @@ checksum and provenance in `evs_v0_1_0.metadata.json`. The metadata's
 `source_sha256` hashes the input EVS Parquet; that Parquet's schema records the
 original immutable CSV hash. The source dataset remains the original joint CSV.
 
-The repository includes synthetic inputs, an executed notebook, 17 automated
+The repository includes synthetic inputs, an executed notebook, 21 automated
 tests, source code, aggregate training diagnostics and three reports. Raw survey
 records, respondent split IDs and fold probability checkpoints are excluded from
 distribution. The binary model is a trusted project artifact, not an upload
 format for untrusted joblib files.
+
+The v0.1.1 audit retains this exact v0.1.0 model/checksum and adds a genuine
+squared-versus-Huber training-loss sensitivity, three-seed diagnostics and
+training-only inference. Those supplements do not change the selected model.
