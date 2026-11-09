@@ -1,0 +1,32 @@
+{
+  "algorithm": "histogram gradient boosting",
+  "early_stopping": true,
+  "expanded_features": 81,
+  "iterations": 78,
+  "settings": {
+    "categorical_features": null,
+    "class_weight": null,
+    "early_stopping": true,
+    "interaction_cst": null,
+    "l2_regularization": 1.0,
+    "learning_rate": 0.1,
+    "loss": "log_loss",
+    "max_bins": 255,
+    "max_depth": null,
+    "max_features": 1.0,
+    "max_iter": 200,
+    "max_leaf_nodes": 15,
+    "min_samples_leaf": 50,
+    "monotonic_cst": null,
+    "n_iter_no_change": 15,
+    "random_state": 42,
+    "scoring": "loss",
+    "tol": 1e-07,
+    "validation_fraction": 0.15,
+    "verbose": 0,
+    "warm_start": false
+  },
+  "trees": 780,
+  "validation_loss_final": 1.7281896813033049,
+  "validation_loss_initial": 1.9990750086341655
+}

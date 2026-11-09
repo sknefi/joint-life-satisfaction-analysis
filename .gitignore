@@ -1,4 +1,14 @@
 .venv/
+.venv-develop/
+.venv-verify/
+.cache/
+tmp/
+dist/
+build/
+*.egg-info/
+.ipynb_checkpoints/
+02_develop/local/
+examples/predictions.csv
 __pycache__/
 *.py[cod]
 .DS_Store
@@ -18,3 +28,6 @@ data/processed/*.metadata.json
 **/subject/*.pdf
 **/output/*
 !**/output/.gitkeep
+
+# Develop PDFs are small, reviewed project deliverables.
+!02_develop/output/*.pdf

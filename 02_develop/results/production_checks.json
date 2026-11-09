@@ -1,0 +1,11 @@
+{
+  "clean_environment_installation": true,
+  "cli_output": "Predicted 120 synthetic respondents successfully.",
+  "hosted_ci_status": "workflow prepared; server status not yet verified",
+  "max_probability_difference": 0.0,
+  "model_sha256": "c4f75205e305d96f396a7396af7abadadc46b7fb45de061847f656a1641921c6",
+  "notebook_executed": true,
+  "saved_model_matches_training_estimator": true,
+  "synthetic_cases": 120,
+  "unit_tests": 17
+}

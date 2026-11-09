@@ -1,0 +1,62 @@
+{
+  "analysis_n": 59122,
+  "bootstrap_repetitions": 1000,
+  "contrasts": [
+    {
+      "causal": false,
+      "ci_high": 0.3330603280489034,
+      "ci_low": 0.300637783744045,
+      "contrast": "income_high_minus_low",
+      "estimate": 0.31736547401540327,
+      "standard_error": 0.008154718332084773
+    },
+    {
+      "causal": false,
+      "ci_high": 0.20944755567568954,
+      "ci_low": 0.17017629695255646,
+      "contrast": "paid_minus_unemployed",
+      "estimate": 0.18991982905016302,
+      "standard_error": 0.009692827292998217
+    }
+  ],
+  "interval_method": "percentile iid respondent bootstrap within fixed countries; approximate, not full survey-design intervals",
+  "limitations": "No definitive PSU/stratum identifiers; within-country cluster dependence, nonresponse and measurement bias are not repaired.",
+  "missing_income_fraction": 0.1470439785995491,
+  "overall": [
+    {
+      "ci_high": 0.7285629714826968,
+      "ci_low": 0.7217106153377761,
+      "effective_n": 59122.0,
+      "estimate": 0.7251107878623863,
+      "kind": "overall",
+      "n": 59122,
+      "standard_error": 0.0017764293005155247,
+      "suppressed": false,
+      "value": "unweighted"
+    },
+    {
+      "ci_high": 0.7149134063132775,
+      "ci_low": 0.7055215710617302,
+      "effective_n": 38050.97847698444,
+      "estimate": 0.7098748035979809,
+      "kind": "overall",
+      "n": 59122,
+      "standard_error": 0.0023820337646336576,
+      "suppressed": false,
+      "value": "equal_country"
+    },
+    {
+      "ci_high": 0.6957968422362323,
+      "ci_low": 0.6772964016588385,
+      "effective_n": 11072.632592440914,
+      "estimate": 0.686048052268062,
+      "kind": "overall",
+      "n": 59122,
+      "standard_error": 0.004688206874937859,
+      "suppressed": false,
+      "value": "population"
+    }
+  ],
+  "population_scope": "36 EVS country populations, private-household adults, 2017-2021",
+  "seed": 42
+}

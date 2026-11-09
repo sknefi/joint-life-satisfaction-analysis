@@ -1,0 +1,13 @@
+{
+  "income_missing": {
+    "effective_n": 5624.076894870804,
+    "estimate": 0.7177466031732951,
+    "n": 8654
+  },
+  "income_observed": {
+    "effective_n": 32461.773859601395,
+    "estimate": 0.7083931354350438,
+    "n": 50468
+  },
+  "interpretation": "A difference flags selection risk; neither imputation nor weighting identifies an MNAR correction."
+}

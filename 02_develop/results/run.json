@@ -1,0 +1,18 @@
+{
+  "code_sha256": "622af2d67244d18cc9a755f119bc7e8d77dc96b335823c5acc19b13298a75503",
+  "prediction_test_evaluations": 0,
+  "seed": 42,
+  "selected_model": "boosting",
+  "source_sha256": "978592d03407591d74b1fd8539a881c35c497eaff9045be25cc2a2ff00e99b84",
+  "training_rows": 34740,
+  "training_weighting": "unweighted respondent prediction; survey weighting used separately for inference",
+  "versions": {
+    "joblib": "1.6.0",
+    "numpy": "2.5.4",
+    "pandas": "3.1.1",
+    "pyarrow": "25.0.1",
+    "python": "3.12.14",
+    "scikit-learn": "1.9.1",
+    "scipy": "1.18.1"
+  }
+}

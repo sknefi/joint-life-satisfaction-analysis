@@ -1,0 +1,100 @@
+{
+  "candidates": [
+    {
+      "features": [
+        "X001",
+        "X003",
+        "X025R",
+        "X028",
+        "X047E_EVS5",
+        "A009",
+        "A165",
+        "A173",
+        "cntry_AN"
+      ],
+      "high_brier": 0.19903164378062493,
+      "log_loss": 1.9990772031090074,
+      "mae": 1.5653841555852186,
+      "mae_se": 0.00895441530844361,
+      "model": "baseline",
+      "parameters": {},
+      "rps": 0.12514909964069174
+    },
+    {
+      "boundary_extension": true,
+      "features": [
+        "X001",
+        "X003",
+        "X025R",
+        "X028",
+        "X047E_EVS5",
+        "A009",
+        "A165",
+        "A173",
+        "cntry_AN"
+      ],
+      "high_brier": 0.14939984526592107,
+      "log_loss": 1.8017496580369101,
+      "mae": 1.2548847475370182,
+      "mae_se": 0.0074341168879953025,
+      "model": "ordinal",
+      "parameters": {
+        "alpha": 0.01
+      },
+      "rps": 0.10010982141195335
+    },
+    {
+      "boundary_extension": true,
+      "features": [
+        "X001",
+        "X003",
+        "X025R",
+        "X028",
+        "X047E_EVS5",
+        "A009",
+        "A165",
+        "A173",
+        "cntry_AN"
+      ],
+      "high_brier": 0.14969679326717378,
+      "log_loss": 1.7529886656629317,
+      "mae": 1.2504110248238187,
+      "mae_se": 0.005477620529728956,
+      "model": "forest",
+      "parameters": {
+        "max_depth": 14,
+        "max_features": 0.7,
+        "min_samples_leaf": 10
+      },
+      "rps": 0.09870176543159014
+    },
+    {
+      "features": [
+        "X001",
+        "X003",
+        "X025R",
+        "X028",
+        "X047E_EVS5",
+        "A009",
+        "A165",
+        "A173",
+        "cntry_AN"
+      ],
+      "high_brier": 0.14513136073784016,
+      "log_loss": 1.714880308429833,
+      "mae": 1.2248724317568325,
+      "mae_se": 0.005712575878008767,
+      "model": "boosting",
+      "parameters": {
+        "l2_regularization": 1.0,
+        "learning_rate": 0.1,
+        "max_leaf_nodes": 15,
+        "min_samples_leaf": 50
+      },
+      "rps": 0.09631144225011125
+    }
+  ],
+  "rule": "lowest mean CV MAE",
+  "selected": "boosting",
+  "selected_before_production_validation": true
+}

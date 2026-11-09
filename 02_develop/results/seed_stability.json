@@ -1,0 +1,20 @@
+[
+  {
+    "log_loss": 1.7532143007129453,
+    "mae": 1.2489655488733198,
+    "mae_original_seed": 1.2504110248238187,
+    "model": "forest",
+    "purpose": "randomization sensitivity, not additional selection",
+    "rps": 0.09872070330253696,
+    "seed": 2026
+  },
+  {
+    "log_loss": 1.7149919737276,
+    "mae": 1.2244091881839132,
+    "mae_original_seed": 1.2248724317568325,
+    "model": "boosting",
+    "purpose": "randomization sensitivity, not additional selection",
+    "rps": 0.09630895982696314,
+    "seed": 2026
+  }
+]
