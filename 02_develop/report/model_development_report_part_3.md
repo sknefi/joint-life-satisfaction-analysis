@@ -9,16 +9,21 @@ An installable, versioned Python repository for students/researchers reproducing
 
 ## 2. Install and run
 
+Clone the repository (access required), or unzip the submission kit and open its project folder. The ZIP needs no GitHub login; skip the first two commands when using it. Run the following on macOS/Linux with Python 3.12:
+
 ```text
+git clone https://github.com/sknefi/joint-life-satisfaction-analysis.git
+cd joint-life-satisfaction-analysis
 python3.12 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements-model-lock.txt
 python -m pip install --no-deps .
 evs-predict --input examples/respondents.csv --output predictions.csv
-python -m unittest discover -s tests -p 'test_*.py'
 ```
 
-Download/unzip the submission kit or clone the repository first; run commands from its root. The kit also contains a pip-installable wheel and synthetic saved reference cases. The model artifact lives in models/; default paths assume the repository root. Elsewhere pass --model /path/to/evs_v0_1_0.joblib. The notebook notebooks/quickstart.ipynb demonstrates synthetic profiles without requiring the respondent dataset. Source data access instructions and immutable-source rules are in data/README.md; make data, train, inference and develop-reports reproduce the analysis locally.
+Expected message: <b>Predicted 3 respondents; saved predictions.csv.</b> Open that CSV for scores and probabilities. The repository/ZIP includes the model in models/; the wheel installs code only. Prediction needs no survey data. The original dataset and Parquet are not distributed; full analysis requires obtaining the source CSV and creating the Parquet with make data.
+
+<b>Full instructions and project information:</b> see <link href='https://github.com/sknefi/joint-life-satisfaction-analysis#readme' color='#168C8C'>README.md</link> in the project root for installation, inputs, examples, tests, data access and analysis reproduction. The notebook notebooks/quickstart.ipynb provides a walkthrough. Outside the project root, pass --model /path/to/evs_v0_1_0.joblib.
 
 
 ## 3. Inputs, outputs and scope

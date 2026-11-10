@@ -8,10 +8,46 @@ The project uses the EVS portion of the joint file, with fieldwork during 2017-2
 
 The response variable is `A170`, satisfaction with life, on the ordinal 1-10 scale. EVS is selected using `study == 1`; the joint raw CSV remains unchanged. The EVS subset contains 59,438 respondents from 36 countries. Develop compares predictive models and estimates weighted descriptive associations. It does not identify causal effects.
 
+## Get the project
+
+Clone the repository and enter its folder:
+
+```bash
+git clone https://github.com/sknefi/joint-life-satisfaction-analysis.git
+cd joint-life-satisfaction-analysis
+```
+
+The repository is private, so cloning requires access. Alternatively, extract
+the submitted ZIP and open a terminal in the extracted project folder, where
+`README.md` and `models/` are located. The ZIP works without a GitHub account.
+
+## Choose what to run
+
+| I want to... | Do I need the survey dataset? | Follow |
+|---|---|---|
+| Try the saved model on example or new profiles | No | Quickstart below |
+| Repeat training, statistical analysis and report generation | Yes | Full analysis reproduction below |
+
+### What is included?
+
+| Content | Repository / submission ZIP | Python wheel (`.whl`) |
+|---|---|---|
+| Python code and installed commands | Yes | Yes |
+| Trained model and metadata | Yes, in `models/` | No; keep them separately |
+| Develop PDFs, documentation, notebook and tests | Yes | No |
+| Invented example profiles | Yes, in `examples/` | No |
+| Original survey dataset | No; obtain it separately | No |
+| Generated Parquet dataset | No; create it with `make data` | No |
+
+Cloning downloads the project files. Installing the Python package makes its
+code and commands available in your Python environment. The submission ZIP
+also includes a wheel in `release/`; the quickstart installs directly from the
+project folder, so using the wheel is optional. Nothing is hosted online.
+
 ## Quickstart: use the released model without the survey data
 
-Use Python **3.12** for the tested v0.1.0 environment. Clone this repository and
-run the following from its root:
+Use Python **3.12** for the tested release environment. These commands are for
+macOS/Linux. Run them from the project folder:
 
 ```bash
 python3.12 -m venv .venv
@@ -19,6 +55,30 @@ source .venv/bin/activate
 python -m pip install -r requirements-model-lock.txt
 python -m pip install --no-deps .
 evs-predict --input examples/respondents.csv --output predictions.csv
+```
+
+Expected terminal message:
+
+```text
+Predicted 3 respondents; saved predictions.csv
+```
+
+Open `predictions.csv` in the project folder. It contains one row per input
+profile, in the same order. The example results, rounded, are:
+
+| Example row | Predicted score | Probability of scores 7-10 |
+|---|---|---|
+| 1 | 8 | 0.8475 (84.75%) |
+| 2 | 6 | 0.4484 (44.84%) |
+| 3 | 9 | 0.9447 (94.47%) |
+
+The file also contains `p_1` through `p_10`, the probabilities of each score.
+To predict your own profiles, replace the input path; use the columns and codes
+listed under Prediction contract below. You do not need to retrain the model.
+
+Optional: run the automated tests in the same environment:
+
+```bash
 python -m unittest discover -s tests -p 'test_*.py'
 ```
 
@@ -84,10 +144,19 @@ high-minus-low income and paid-work-minus-unemployed gaps are **associations**.
 Intervals use an approximate within-country respondent bootstrap, not a full
 complex-survey design. See the reports and model card for limitations.
 
-For complete reproduction, obtain the source files as described in
-[`data/README.md`](data/README.md), then install the full environment:
+### Full analysis reproduction: requires the survey dataset
+
+Skip this section if you only want to use the saved model. For the full analysis,
+obtain the official source files as described in [`data/README.md`](data/README.md).
+Save the original CSV as `data/raw/evs_wvs_dataset.csv`. It is not included in the
+repository, wheel or submission ZIP. `make data` creates the Parquet locally.
+
+From the project folder, create or activate the environment, install the full
+requirements, then run the analysis in this order:
 
 ```bash
+python3.12 -m venv .venv
+source .venv/bin/activate
 python -m pip install -r requirements-lock.txt
 python -m pip install --no-deps -e .
 make data
@@ -149,49 +218,36 @@ The joint CSV remains the only source of truth. `make data` creates an EVS-only 
 
 ```text
 .
-├── 01_define
-│   ├── subject                   # Problem Definition briefs
-│   ├── report                    # LaTeX sources and generated EVS profile
-│   └── output                    # Rendered PDFs; kept locally
-├── 02_develop
-│   ├── subject                   # Model Development briefs
-│   ├── report
-│   └── output
-├── 03_assure
-│   ├── subject
-│   ├── report
-│   └── output
-├── 04_operate
-│   ├── subject
-│   ├── report
-│   └── output
-├── Makefile
-├── README.md
-├── requirements.txt
-├── data
-│   ├── processed
-│   │   └── evs_v5_0.parquet          # Generated by `make data`; not committed
-│   └── raw
-│       ├── evs_wvs_dataset.csv
-│       └── info.txt
-├── docs
-│   ├── ZA7505_cdb.pdf           # Shared dataset codebook
-│   └── info.txt
-├── scripts
-│   ├── build_evs_parquet.py
-│   └── profile_dataset.py
-├── src
-│   └── evs_profile
-│       ├── __init__.py
-│       ├── config.py
-│       ├── dataset.py
-│       ├── reader.py
-│       ├── report.py
-│       └── statistics.py
-└── tests
-    ├── test_dataset.py
-    ├── test_reader.py
-    └── test_statistics.py
+├── README.md                     # Start here
+├── Makefile                      # Short commands for project tasks
+├── pyproject.toml                # Package and installed command definitions
+├── requirements-model-lock.txt   # Dependencies for prediction and tests
+├── requirements-lock.txt         # Full analysis/report dependencies
+├── 01_define/
+│   ├── subject/                  # Assignment briefs, downloaded locally
+│   ├── report/                   # Define sources
+│   └── output/                   # Define PDFs, kept locally
+├── 02_develop/
+│   ├── subject/                  # Assignment briefs, downloaded locally
+│   ├── report/                   # Generated report text
+│   ├── results/                  # Aggregate analysis results
+│   ├── local/                    # Local checkpoints; not distributed
+│   └── output/                   # Three Develop PDFs
+├── 03_assure/                    # Future evaluation stage
+├── 04_operate/                   # Future operation stage
+├── data/
+│   ├── raw/                      # Original dataset; obtain separately
+│   └── processed/                # Generated Parquet; not distributed
+├── docs/                         # Official codebook; obtain separately
+├── src/
+│   ├── evs_profile/              # Data reading, preparation and profiling
+│   └── evs_model/                # Models, training, statistics and prediction
+├── scripts/                      # Report, verification and packaging scripts
+├── models/                       # Trained model, metadata and model card
+├── examples/                     # Invented profiles and reference predictions
+├── notebooks/                    # Quickstart walkthrough
+├── tests/                        # Automated tests
+└── .github/workflows/            # GitHub Actions test workflow
 ```
 
 `scripts/profile_dataset.py` is only the command-line entry point. The implementation is separated by responsibility:
